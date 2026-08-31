@@ -1,0 +1,95 @@
+{
+    "z": {
+        "theme": "green",
+        "password": "z",
+        "startMaximized": true,
+        "categories": {
+            "Physical": {
+                "description": "Physical items like locks, safes, etc.",
+                "type": "Physical"
+            },
+            "Digital": {
+                "description": "Digital accounts like email, social media, etc.",
+                "type": "Digital"
+            }
+        },
+        "passwords": {
+            "Gmail Account": {
+                "category": "Digital",
+                "description": "Gmail Account",
+                "username": "gmailuser",
+                "password": "gmailpass"
+            },
+            "Google Account": {
+                "category": "Digital",
+                "description": "Google Account",
+                "username": "googleuser",
+                "password": "googlepass",
+                "status": "Inactive"
+            },
+            "Bob's Laptop": {
+                "category": "Digital",
+                "description": "Bob's Laptop",
+                "username": "bobslaptopuser",
+                "password": "bobslaptoppass"
+            },
+            "Home Door Lock": {
+                "category": "Physical",
+                "description": "Home Door Lock",
+                "username": "homelockuser",
+                "password": "homelockpass"
+            }
+        }
+    },
+    "a": {
+        "theme": "red",
+        "password": "a",
+        "startMaximized": false,
+        "categories": {
+            "Digital": {
+                "description": "Digital accounts like email, social media, etc.",
+                "type": "Digital"
+            },
+            "Random": {
+                "description": "Random items",
+                "type": "Physical"
+            }
+        },
+        "passwords": {
+            "Facebook Account": {
+                "category": "Digital",
+                "description": "Facebook Account",
+                "username": "facebookuser",
+                "password": "facebookpass"
+            },
+            "Random Account": {
+                "category": "Random",
+                "description": "Random Account",
+                "username": "randomuser",
+                "password": "randompass"
+            }
+        }
+    },
+    "q": {
+        "password": "q",
+        "categories": {},
+        "passwords": {},
+        "startMaximized": true
+    },
+    "zacianculovici": {
+        "theme": "blue",
+        "password": "testingpassword",
+        "startMaximized": true,
+        "categories": {},
+        "passwords": {
+            "1234": {
+                "description": "",
+                "category": "No Categories!",
+                "username": "",
+                "password": "",
+                "website": "",
+                "status": "Active"
+            }
+        }
+    }
+}
