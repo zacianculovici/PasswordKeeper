@@ -45,7 +45,8 @@ class SecureDataManager:
                 fernet = Fernet(generated_key)
                 encrypted_data = file.read()
                 decrypted_data = fernet.decrypt(encrypted_data.encode())
-                print(f"Decrypted data for user '{username}': {decrypted_data.decode()}")
+                if debug_mode == "verbose":
+                    print(f"Decrypted data for user '{username}': {decrypted_data.decode()}")
                 return json.loads(decrypted_data.decode())
 
     def save_user_data(self):
