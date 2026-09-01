@@ -1473,7 +1473,7 @@ class MainWindow(ctk.CTk):
         self.plus_category_btn_1._ctkmaker_min = 32
         self.plus_category_btn_1._ctkmaker_fixed = True
 
-    def update_password_list(self, unsaved_password=None):
+    def update_password_list(self, unsaved_password=None, all=False):
         for child in self.password_list_sf_1.winfo_children():
             child.destroy()
         self.password_buttons = []
@@ -1482,7 +1482,7 @@ class MainWindow(ctk.CTk):
             print(f"Password data: {self.data_manager.user_data['passwords']}")
 
         for password, data in self.data_manager.user_data["passwords"].items():
-            if data.get("category") == self.selected_category or self.selected_category == "All" or self.selected_category is None:
+            if all or data.get("category") == self.selected_category or self.selected_category is None:
                 if debug_mode == "verbose":
                     print(f"Creating button for password: {password}")
                 password_button = ctk.CTkButton(
@@ -1542,8 +1542,8 @@ class MainWindow(ctk.CTk):
         if not category_name:
             return
 
-        if category_name == "All":
-            self.update_password_list()
+        if category_name.lower() == "all":
+            self.update_password_list(all = True)
             self.set_main_frame(self.main_frame_none)
             return
 
@@ -1681,7 +1681,7 @@ class MainWindow(ctk.CTk):
     def recursive_rename_category(self, old_category_name, new_category_name):
         user_data = self.data_manager.user_data
         if "passwords" in user_data:
-            for password_name, password_data in user_data["passwords"].items():
+            for password_name, password_data in list(user_data["passwords"].items()):
                 if password_data.get("category") == old_category_name:
                     password_data["category"] = new_category_name
                     print(f"Updated category for password '{password_name}' to '{new_category_name}'")
@@ -1726,13 +1726,24 @@ class MainWindow(ctk.CTk):
         if not category_name:
             self.set_main_frame(self.main_frame_none)
             return
-        self.data_manager.user_data["categories"].pop(category_name, None)
-        self.data_manager.save_file_data()
-        show_toast(self, f"Category '{category_name}' deleted successfully.", "success")
-        self.selected_category = None
-        self.update_category_list()
-        self.update_password_list()
-        self.set_main_frame(self.main_frame_none)
+        dependencies = []
+        if "passwords" in self.data_manager.user_data:
+            for password_name, password_data in list(self.data_manager.user_data["passwords"].items()):
+                if password_data.get("category") == category_name:
+                    dependencies.append(password_name)
+        answer = CustomButtonDialog(self, title="Delete Category", message=f"Are you sure you want to delete the category '{category_name}'?\n\nThis will also delete {len(dependencies)} associated password(s):\n{', '.join(dependencies) if dependencies else 'None'}", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path='assets/icons/circle-exclamation-mark.ico').result
+        if answer.lower() == "delete":
+            self.data_manager.user_data["categories"].pop(category_name, None)
+            for password_name in dependencies:
+                self.data_manager.user_data["passwords"].pop(password_name, None)
+            self.data_manager.save_user_data()
+            show_toast(self, f"Category '{category_name}' deleted successfully.", "success")
+            self.selected_category = None
+            self.update_category_list()
+            self.update_password_list()
+            self.set_main_frame(self.main_frame_none)
+        else:
+            print("User canceled the delete action. Staying on the current frame.")
 
     def delete_password(self):
         password_name = self.password_name_field.get().strip()
