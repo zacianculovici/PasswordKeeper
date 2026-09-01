@@ -27,7 +27,7 @@ builtins.print = custom_print
 print(f"========= Password Keeper: Running from: \"{__file__}\" =========")
 
 global debug_mode, show_loading_window, theme_names, orig_pack, orig_grid, orig_place
-debug_mode = "off"  # Set to minimal, medium, verbose, or off for different levels of debug output. Minimal will print only essential information, medium will print more detailed information, verbose will print everything, and off will disable debug output entirely.
+debug_mode = "verbose"  # Set to minimal, medium, verbose, or off for different levels of debug output. Minimal will print only essential information, medium will print more detailed information, verbose will print everything, and off will disable debug output entirely.
 show_loading_window = False  # Set to True to show the loading window, or False to disable it.
 
 # Get names without extensions for all files in the assets/themes folder
@@ -360,7 +360,7 @@ class MainWindow(ctk.CTk):
         self.password_list_sf_1._parent_frame.configure(width=200, height=200)
         self.password_list_sf_1._parent_frame.grid_propagate(False)
 
-        self.update_password_list()
+        self.update_password_list(all = True)
 
         self.passwords_v_1.bind("<Configure>", lambda _e, _c=self.passwords_v_1: ctk.balance_pack(_c, 'height'))
 
@@ -1293,7 +1293,7 @@ class MainWindow(ctk.CTk):
         reset_geometry_managers()
 
     def set_main_frame(self, frame):
-        self.update_unsaved()
+        # self.update_unsaved()
         if self.check_for_unsaved_changes():
             match self.prompt_save_changes().lower():
                 case "save":
@@ -1323,11 +1323,13 @@ class MainWindow(ctk.CTk):
             return False
 
         if SecureDataManager.verify_credentials(username, password):
-            print(f"Credentials: Username: {username}, Password: {password}, Remember: {bool(remember_username)}")
+            if debug_mode == "verbose":
+                print(f"Credentials: Username: {username}, Password: {password}, Remember: {bool(remember_username)}")
             self.current_user = username
             self.signedin = True
             self.data_manager = SecureDataManager(username, password)
-            print(f"User data loaded for {username}: {self.data_manager.user_data}")
+            if debug_mode == "verbose":
+                print(f"User data loaded for {username}: {self.data_manager.user_data}")
             if self.data_manager.start_maximised():
                 self.after(300, lambda: self.state('zoomed'))
             if remember_username:
@@ -1354,7 +1356,8 @@ class MainWindow(ctk.CTk):
             return False
 
         try:
-            print(f"Credentials (signup): Username: {username}, Password: {password}, Remember: {bool(remember_username)}")
+            if debug_mode == "verbose":
+                print(f"Credentials (signup): Username: {username}, Password: {password}, Remember: {bool(remember_username)}")
             self.data_manager = SecureDataManager(username, password, create=True)
             self.current_user = username
             self.signedin = True
@@ -1480,6 +1483,7 @@ class MainWindow(ctk.CTk):
 
         if debug_mode == "verbose":
             print(f"Password data: {self.data_manager.user_data['passwords']}")
+            print(f"All: {all}")
 
         for password, data in self.data_manager.user_data["passwords"].items():
             if all or data.get("category") == self.selected_category or self.selected_category is None:
@@ -1500,8 +1504,13 @@ class MainWindow(ctk.CTk):
                 password_button._ctkmaker_min = 32
                 password_button._ctkmaker_fixed = True
                 self.password_buttons.append(password_button)
+                if debug_mode == "verbose":
+                    print(self.password_buttons)
+                    print(f"Added password button for: {password}")
 
         if len(self.password_buttons) == 0:
+            if debug_mode == "verbose":
+                print("No passwords available to display.")
             self.no_passwords_label = ctk.CTkLabel(
                 self.password_list_sf_1,
                 text="No passwords available.\nPlease create one first.",
@@ -1543,6 +1552,7 @@ class MainWindow(ctk.CTk):
             return
 
         if category_name.lower() == "all":
+            print("All categories selected. Updating password list to show all passwords.")
             self.update_password_list(all = True)
             self.set_main_frame(self.main_frame_none)
             return
