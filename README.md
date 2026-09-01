@@ -23,7 +23,7 @@ Download PasswordKeeper for your system:
 
 ## ✨ AI Usage
 AI has been used in parts of this project for:
-* Minor bug fixes - Githube Copilot
+* Minor bug fixes - Github Copilot
 * Small code generation - Github Copilot
 * Minor error explanation and fixes - Github Copilot
 * Code completions - Github Copilot (The fact that Github Copilot is giving me suggestions as I type right now "is a huge help, and I am very grateful for it!") (Text in "" is a quote from Github Copilot 🤣🤣🤣) 
