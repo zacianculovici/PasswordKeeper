@@ -219,3 +219,6 @@ __marimo__/
 
 # Wakatime
 .wakatime-project
+
+# Python Application Output
+*.enc
