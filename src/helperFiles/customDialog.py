@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from helperFiles.center_window_on_screen import center_window_on_screen
 
 class CustomButtonDialog(ctk.CTkToplevel):
     def __init__(self, parent, title="Dialog", message="This is a custom dialog.", options=None, icon_path=None, wrap_number=3):
