@@ -16,6 +16,7 @@ import webbrowser
 import builtins
 import datetime
 from helperFiles.localDataManager import *
+import traceback
 
 global original_print
 original_print = builtins.print
@@ -83,6 +84,8 @@ class MainWindow(ctk.CTk):
         self.password_buttons = []
 
         self.current_main_frame = "none"  # Track the current main frame: "password", "category", or "none"
+
+        self.all_category = True
 
         # ====== Build the UI ======
         self.requestAccount()
@@ -360,7 +363,7 @@ class MainWindow(ctk.CTk):
         self.password_list_sf_1._parent_frame.configure(width=200, height=200)
         self.password_list_sf_1._parent_frame.grid_propagate(False)
 
-        self.update_password_list(all = True)
+        self.update_password_list("All")
 
         self.passwords_v_1.bind("<Configure>", lambda _e, _c=self.passwords_v_1: ctk.balance_pack(_c, 'height'))
 
@@ -1280,6 +1283,7 @@ class MainWindow(ctk.CTk):
         self.label_please_select._ctkmaker_min = 16
 
         self.set_main_frame(self.main_frame_none)
+        self.update_password_list("All")
 
         self.btn_close_pass.configure(command=lambda: self.set_main_frame(self.main_frame_none))
         self.btn_close_cat.configure(command=lambda: self.set_main_frame(self.main_frame_none))
@@ -1287,13 +1291,14 @@ class MainWindow(ctk.CTk):
         self.bind("<Control-s>", lambda _e: self.save_current_item())
         self.bind("<Control-w>", lambda _e: self.set_main_frame(self.main_frame_none))
         self.bind_all("<Key>", self.update_unsaved)
+        self.bind_all("<Button-1>", self.update_unsaved)
 
         if show_loading_window:
             self.loadtk.update_progress()
         reset_geometry_managers()
 
     def set_main_frame(self, frame):
-        # self.update_unsaved()
+        self.update_unsaved()
         if self.check_for_unsaved_changes():
             match self.prompt_save_changes().lower():
                 case "save":
@@ -1306,6 +1311,8 @@ class MainWindow(ctk.CTk):
                     return False
         else:
             frame.tkraise()
+        self.update_password_list()
+        self.update_category_list()
         match frame:
             case self.main_frame_pass:
                 self.current_main_frame = "password"
@@ -1426,7 +1433,7 @@ class MainWindow(ctk.CTk):
             text='All',
             text_color='#ffffff',
             full_circle=True,
-            command=lambda: self.select_category("All")
+            command=lambda: self.select_category("All") and setattr(self, "selected_category", "All")
         )
         self.all_btn_category.pack(side="top", pady=2)
         self.all_btn_category._ctkmaker_min = 32
@@ -1476,17 +1483,17 @@ class MainWindow(ctk.CTk):
         self.plus_category_btn_1._ctkmaker_min = 32
         self.plus_category_btn_1._ctkmaker_fixed = True
 
-    def update_password_list(self, unsaved_password=None, all=False):
+    def update_password_list(self, unsaved_password=None):
+        print(f"Traceback[update_password_list()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
         for child in self.password_list_sf_1.winfo_children():
             child.destroy()
         self.password_buttons = []
 
         if debug_mode == "verbose":
             print(f"Password data: {self.data_manager.user_data['passwords']}")
-            print(f"All: {all}")
 
         for password, data in self.data_manager.user_data["passwords"].items():
-            if all or data.get("category") == self.selected_category or self.selected_category is None:
+            if self.selected_category.lower() == "all" or data.get("category") == self.selected_category or self.selected_category is None:
                 if debug_mode == "verbose":
                     print(f"Creating button for password: {password}")
                 password_button = ctk.CTkButton(
@@ -1505,7 +1512,6 @@ class MainWindow(ctk.CTk):
                 password_button._ctkmaker_fixed = True
                 self.password_buttons.append(password_button)
                 if debug_mode == "verbose":
-                    print(self.password_buttons)
                     print(f"Added password button for: {password}")
 
         if len(self.password_buttons) == 0:
@@ -1553,7 +1559,8 @@ class MainWindow(ctk.CTk):
 
         if category_name.lower() == "all":
             print("All categories selected. Updating password list to show all passwords.")
-            self.update_password_list(all = True)
+            self.selected_category = "All"
+            self.update_password_list("All")
             self.set_main_frame(self.main_frame_none)
             return
 
@@ -1800,6 +1807,8 @@ class MainWindow(ctk.CTk):
                 if debug_mode == "verbose":
                     print(f"Saved data: '{password_name}': {saved_data}")
                     print(f"Current data: '{self.selected_password}': {current_data}")
+                if self.selected_password == "All":
+                    return False
                 return saved_data != current_data or password_name != self.selected_password
         elif self.current_main_frame == "category":
             category_name = self.category_name_field.get().strip()
@@ -1812,6 +1821,8 @@ class MainWindow(ctk.CTk):
                 if debug_mode == "verbose":
                     print(f"Saved data: '{category_name}': {saved_data}")
                     print(f"Current data: '{self.selected_category}': {current_data}")
+                if self.selected_category == "All":
+                    return False
                 return saved_data != current_data or category_name != self.selected_category
         return False
 
@@ -1846,6 +1857,7 @@ class MainWindow(ctk.CTk):
             show_toast(self, "No valid website URL provided.", "error")
 
     def update_unsaved(self, event=None):
+        print(f"Traceback[update_unsaved()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
         unsaved = self.check_for_unsaved_changes()
         if unsaved:
             match self.current_main_frame:
