@@ -8,7 +8,6 @@ import login
 import signup
 import tkinter as tk
 from pathlib import Path
-from helperFiles import loadingPleaseWait
 from helperFiles.customDialog import CustomButtonDialog
 import webbrowser
 import builtins
@@ -110,6 +109,7 @@ class MainWindow(ctk.CTk):
         self.img_check = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'check.png')), dark_image=Image.open(resource_path('assets', 'images', 'check.png')), size=(20, 20))
 
         if show_loading_window:
+            from helperFiles import loadingPleaseWait
             self.loadtk = loadingPleaseWait.LoadingWindow(self, text="Loading theme: <X%>\nplease wait...\n", total_amount=75, delay=0, debug=debug_mode)
             ctk.CTkBaseClass.grid = lambda myself, *args, **kwargs: custom_grid(myself, self.loadtk, *args, **kwargs)
             ctk.CTkBaseClass.pack = lambda myself, *args, **kwargs: custom_pack(myself, self.loadtk, *args, **kwargs)
