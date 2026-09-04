@@ -32,6 +32,8 @@ class Account(ctk.CTkToplevel):
         # Preload images so they are not garbage-collected
         self.img_log_out = ctk.CTkImage(light_image=Image.open('assets/images/log-out.png'), dark_image=Image.open('assets/images/log-out.png'), size=(20, 20))
         self.img_trash_2 = ctk.CTkImage(light_image=Image.open('assets/images/trash-2.png'), dark_image=Image.open('assets/images/trash-2.png'), size=(20, 20))
+        self.img_eye = ctk.CTkImage(light_image=Image.open('assets/images/eye.png'), dark_image=Image.open('assets/images/eye.png'), size=(20, 20))
+        self.img_eye_off = ctk.CTkImage(light_image=Image.open('assets/images/eye-off.png'), dark_image=Image.open('assets/images/eye-off.png'), size=(20, 20))
 
         self.body_1 = ctk.CTkFrame(
             self,
@@ -429,9 +431,22 @@ class Account(ctk.CTkToplevel):
             text_color='#dce4ee',
             placeholder_text_color='#9ea0a2',
             justify='left',
+            show='•'
         )
         self.field_change_password_1.pack(side="left", fill="both", expand=True, padx=2)
         self.field_change_password_1._ctkmaker_min = 50
+
+        self.show_hide_password_button_1 = ctk.CTkButton(
+            self.change_password_1,
+            width=30,
+            height=30,
+            text='',
+            image=self.img_eye,
+            command=self._toggle_password_visibility
+        )
+        self.show_hide_password_button_1.pack(side="right", padx=2)
+        self.show_hide_password_button_1._ctkmaker_min = 30
+        self.show_hide_password_button_1._ctkmaker_fixed = True
 
         self.change_password_confirm_1 = ctk.CTkFrame(
             self.main_1,
@@ -481,9 +496,22 @@ class Account(ctk.CTkToplevel):
             text_color='#dce4ee',
             placeholder_text_color='#9ea0a2',
             justify='left',
+            show='•'
         )
         self.field_change_password_confirm_1.pack(side="left", fill="both", expand=True, padx=2)
         self.field_change_password_confirm_1._ctkmaker_min = 50
+
+        self.show_hide_confirm_password_button_1 = ctk.CTkButton(
+            self.change_password_confirm_1,
+            width=30,
+            height=30,
+            text='',
+            image=self.img_eye,
+            command=self._toggle_confirm_password_visibility
+        )
+        self.show_hide_confirm_password_button_1.pack(side="right", padx=2)
+        self.show_hide_confirm_password_button_1._ctkmaker_min = 30
+        self.show_hide_confirm_password_button_1._ctkmaker_fixed = True
 
         self.button_change_password_1 = ctk.CTkButton(
             self.main_1,
@@ -491,6 +519,7 @@ class Account(ctk.CTkToplevel):
             height=32,
             text='Change Password',
             full_circle=True,
+            command=self.change_password
         )
         self.button_change_password_1.pack(side="top", pady=2)
         self.button_change_password_1._ctkmaker_min = 32
@@ -550,9 +579,42 @@ class Account(ctk.CTkToplevel):
         parent._build_ui()
 
     def permanently_delete_account(self):
-        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "This action cannot be undone.", ["Yes", "No"]).result.lower()
+        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "This action cannot be undone.", {"Yes": "#E01E1E", "No": "#2A2A2A"}, icon_path='assets/icons/circle-alert.ico').result.lower()
         if answer == "yes":
             self.parent.delete_account()
+        else:
+            self.grab_set()  # Re-grab focus to the dialog if the user cancels the deletion
+
+    def change_password(self):
+        new_password = self.field_change_password_1.get()
+        confirm_password = self.field_change_password_confirm_1.get()
+
+        if new_password != confirm_password:
+            show_toast(self, "Passwords do not match.", "error")
+            return
+
+        if not new_password:
+            show_toast(self, "Password cannot be empty.", "error")
+            return
+
+        self.parent.data_manager.change_password(new_password)
+        show_toast(self, "Password changed successfully.", "success")
+
+    def _toggle_password_visibility(self):
+        if self.field_change_password_1.cget("show") == "":
+            self.field_change_password_1.configure(show='•')
+            self.show_hide_password_button_1.configure(image=self.img_eye)
+        else:
+            self.field_change_password_1.configure(show="")
+            self.show_hide_password_button_1.configure(image=self.img_eye_off)
+
+    def _toggle_confirm_password_visibility(self):
+        if self.field_change_password_confirm_1.cget("show") == "":
+            self.field_change_password_confirm_1.configure(show='•')
+            self.show_hide_confirm_password_button_1.configure(image=self.img_eye)
+        else:
+            self.field_change_password_confirm_1.configure(show="")
+            self.show_hide_confirm_password_button_1.configure(image=self.img_eye_off)
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
