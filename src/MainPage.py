@@ -17,6 +17,7 @@ import builtins
 import datetime
 from helperFiles.localDataManager import *
 import traceback
+from helperFiles.objects import DangerousButton
 
 global original_print
 original_print = builtins.print
@@ -28,7 +29,7 @@ builtins.print = custom_print
 print(f"========= Password Keeper: Running from: \"{__file__}\" =========")
 
 global debug_mode, show_loading_window, theme_names, orig_pack, orig_grid, orig_place
-debug_mode = "verbose"  # Set to minimal, medium, verbose, or off for different levels of debug output. Minimal will print only essential information, medium will print more detailed information, verbose will print everything, and off will disable debug output entirely.
+debug_mode = "off"  # Set to minimal, medium, verbose, or off for different levels of debug output. Minimal will print only essential information, medium will print more detailed information, verbose will print everything, and off will disable debug output entirely.
 show_loading_window = False  # Set to True to show the loading window, or False to disable it.
 
 # Get names without extensions for all files in the assets/themes folder
@@ -428,19 +429,12 @@ class MainWindow(ctk.CTk):
         self.password_name_field.pack(side="left", fill="both", expand=True)
         self.password_name_field._ctkmaker_min = 50
 
-        self.delete_password_button = ctk.CTkButton(
+        self.delete_password_button = DangerousButton(
             self.header_pass,
             width=80,
             height=50,
-            corner_radius=6,
-            border_width=0,
-            border_color='#efefef',
             text='Delete!',
-            text_color='#ffffff',
             full_circle=True,
-            fg_color='#aa0000',
-            pressed_color='#850000',
-            hover_color='#ff0000',
             image=self.img_trash_2,
             command=self.delete_password
         )
@@ -1020,19 +1014,12 @@ class MainWindow(ctk.CTk):
         self.category_name_field.pack(side="left", fill="both", expand=True)
         self.category_name_field._ctkmaker_min = 50
 
-        self.delete_category_button = ctk.CTkButton(
+        self.delete_category_button = DangerousButton(
             self.header_cat,
             width=80,
             height=50,
-            corner_radius=6,
-            border_width=0,
-            border_color='#efefef',
             text='Delete!',
-            text_color='#ffffff',
             full_circle=True,
-            fg_color='#aa0000',
-            pressed_color='#850000',
-            hover_color='#ff0000',
             image=self.img_trash_2,
             command=self.delete_category
         )
@@ -1290,6 +1277,7 @@ class MainWindow(ctk.CTk):
 
         self.bind("<Control-s>", lambda _e: self.save_current_item())
         self.bind("<Control-w>", lambda _e: self.set_main_frame(self.main_frame_none))
+        self.bind("<Alt-a>", lambda _e: self.open_account_settings())
         self.bind_all("<Key>", self.update_unsaved)
         self.bind_all("<Button-1>", self.update_unsaved)
 
@@ -1357,7 +1345,7 @@ class MainWindow(ctk.CTk):
             show_toast(target, "Passwords do not match.", "error")
             return False
 
-        if not SecureDataManager.username_exists(username):
+        if SecureDataManager.username_exists(username):
             target = self.signupDialog if getattr(self, "signupDialog", None) and self.signupDialog.winfo_exists() else self
             show_toast(target, f"The username '{username}' is already taken.", "error")
             return False
@@ -1448,7 +1436,7 @@ class MainWindow(ctk.CTk):
                 corner_radius=6,
                 border_width=0,
                 border_color='#efefef',
-                text="*" + unsaved_category if category == unsaved_category else category,
+                text='•' + unsaved_category if category == unsaved_category else category,
                 text_color='#ffffff',
                 full_circle=True,
                 command=lambda c=category: self.select_category(c)
@@ -1484,7 +1472,8 @@ class MainWindow(ctk.CTk):
         self.plus_category_btn_1._ctkmaker_fixed = True
 
     def update_password_list(self, unsaved_password=None):
-        print(f"Traceback[update_password_list()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
+        if debug_mode == "verbose":
+            print(f"Traceback[update_password_list()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
         for child in self.password_list_sf_1.winfo_children():
             child.destroy()
         self.password_buttons = []
@@ -1502,7 +1491,7 @@ class MainWindow(ctk.CTk):
                     corner_radius=6,
                     border_width=0,
                     border_color='#efefef',
-                    text="*" + unsaved_password if password==unsaved_password else password,
+                    text='•' + unsaved_password if password==unsaved_password else password,
                     text_color='#ffffff',
                     full_circle=True,
                     command=lambda p=password: (self.select_password(p))
@@ -1542,7 +1531,8 @@ class MainWindow(ctk.CTk):
         self.plus_password_btn_1._ctkmaker_fixed = True
 
     def _toggle_password(self):
-        print("Toggling password visibility")
+        if debug_mode == "verbose":
+            print("Toggling password visibility")
         current = self.field_password.cget("show")
         new_show = "" if current == "•" else "•"
         self.field_password.configure(show=new_show)
@@ -1600,10 +1590,12 @@ class MainWindow(ctk.CTk):
             self.field_user.insert(0, password_data.get("username", ""))
             if password_data.get("username", "") == "":
                 self.field_user._activate_placeholder()
+            password_show = self.field_password.cget("show")
             self.field_password.delete(0, tk.END)
             self.field_password.insert(0, password_data.get("password", ""))
             if password_data.get("password", "") == "":
                 self.field_password._activate_placeholder()
+            self.field_password.configure(show=password_show)
             self.field_category.set(password_data.get("category", "Could not find category!"))
             self.field_website.delete(0, tk.END)
             self.field_website.insert(0, password_data.get("website", "https://"))
@@ -1647,6 +1639,7 @@ class MainWindow(ctk.CTk):
             self.field_desc_pass._activate_placeholder()
             self.field_user._activate_placeholder()
             self.field_password._activate_placeholder()
+            self.field_password.configure(show="•")
             self.field_website._activate_placeholder()
             self.password_name_field.focus_set()
 
@@ -1857,7 +1850,8 @@ class MainWindow(ctk.CTk):
             show_toast(self, "No valid website URL provided.", "error")
 
     def update_unsaved(self, event=None):
-        print(f"Traceback[update_unsaved()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
+        if debug_mode == "verbose":
+            print(f"Traceback[update_unsaved()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
         unsaved = self.check_for_unsaved_changes()
         if unsaved:
             match self.current_main_frame:
@@ -1868,6 +1862,21 @@ class MainWindow(ctk.CTk):
         else:
             self.update_password_list()
             self.update_category_list()
+
+    def save_username(self, username, remember_username):
+        if debug_mode == "verbose":
+            print(f"Saving username: {username}")
+        if remember_username:
+            rememberUsername(username)
+        self.current_user = username
+        self.data_manager.change_username(username)
+        show_toast(self, f"Username '{username}' saved successfully.", "success")
+
+    def delete_account(self):
+        self.data_manager.delete_account()
+        show_toast(self, f"Account '{self.current_user}' deleted successfully.", "success")
+        self.account_settings_dialog.destroy()
+        self.logout()
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
