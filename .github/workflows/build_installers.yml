@@ -17,7 +17,7 @@ jobs:
         include:
           - os: windows-latest
             name: windows
-          - os: macos-15
+          - os: macos-15-intel
             name: macos
           - os: ubuntu-latest
             name: linux
@@ -41,17 +41,17 @@ jobs:
       - name: Build with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --noconfirm --clean --onedir --windowed "src\MainPage.py" --name PasswordKeeper --add-data "src/assets;assets" --collect-data customtkinter
+          pyinstaller --noconfirm --clean --onedir --windowed "src\MainPage.py" --name PasswordKeeper --paths "src" --hidden-import helperFiles.loadingPleaseWait --add-data "src/assets;assets" --collect-data customtkinter
 
       - name: Build with PyInstaller (macOS)
-        if: matrix.os == 'macos-15'
+        if: matrix.os == 'macos-15-intel'
         run: |
-          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --add-data "src/assets:assets" --collect-data customtkinter
+          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --paths "src" --hidden-import helperFiles.loadingPleaseWait --add-data "src/assets:assets" --collect-data customtkinter
 
       - name: Build with PyInstaller (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --add-data "src/assets:assets" --collect-data customtkinter
+          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --paths "src" --hidden-import helperFiles.loadingPleaseWait --add-data "src/assets:assets" --collect-data customtkinter
 
       # --- WINDOWS: Inno Setup Installer (.exe) ---
       - name: Update Version in Installer Script
@@ -76,7 +76,7 @@ jobs:
 
       # --- MACOS: DMG Installer (.dmg) ---
       - name: Build macOS DMG
-        if: matrix.os == 'macos-15'
+        if: matrix.os == 'macos-15-intel'
         run: |
           # Extract version from tag (v1.1.0 -> 1.1.0), fallback if not tagged
           VERSION="${GITHUB_REF_NAME#v}"
@@ -93,7 +93,7 @@ jobs:
             --icon "PasswordKeeper.app" 175 120 \
             --hide-extension "PasswordKeeper.app" \
             --app-drop-link 425 120 \
-            "dist/PasswordKeeper-$VERSION-Universal.dmg" \
+            "dist/PasswordKeeper-$VERSION-macOS-x86_64.dmg" \
             "dist/dmg-root"
 
       # --- LINUX: Tarball Archive (.tar.gz) ---
@@ -146,7 +146,7 @@ jobs:
           # Use sed to replace placeholders in your README
           # Make sure your README has links containing something like PasswordKeeper-VERSION-Windows-Setup.exe
           sed -i "s/PasswordKeeper-.*-Windows-Setup.exe/PasswordKeeper-$VERSION-Windows-Setup.exe/g" README.md
-          sed -i "s/PasswordKeeper-.*-Universal.dmg/PasswordKeeper-$VERSION-Universal.dmg/g" README.md
+          sed -i "s/PasswordKeeper-.*-macOS-x86_64.dmg/PasswordKeeper-$VERSION-macOS-x86_64.dmg/g" README.md
           sed -i "s/PasswordKeeper-.*-Linux-x86_64.tar.gz/PasswordKeeper-$VERSION-Linux-x86_64.tar.gz/g" README.md
 
           # Commit and push the updated README back to main
