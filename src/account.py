@@ -4,6 +4,9 @@ from helperFiles.scrollable_dropdown import ScrollableDropdown
 from pathlib import Path
 from helperFiles.toast import show_toast
 from helperFiles.center_window_on_screen import center_window_on_screen
+from helperFiles.localDataManager import rememberUsername
+from helperFiles.objects import DangerousButton
+from helperFiles.customDialog import CustomButtonDialog
 
 class Account(ctk.CTkToplevel):
     def __init__(self, parent=None, current_user=None, theme_names=None, current_theme=None):
@@ -14,6 +17,7 @@ class Account(ctk.CTkToplevel):
         self.minsize(400, 300)
         self.grab_set()
         self.after(50, lambda: center_window_on_screen(self, 660, 400))
+        self.after(250, lambda: self.iconbitmap("assets/icons/user-round-cog.ico"))
 
         # ===== Initialize variables ======
         self.current_user = current_user
@@ -119,9 +123,24 @@ class Account(ctk.CTkToplevel):
         self.main_1.pack_propagate(False)
         self.main_1.grid_propagate(False)
 
-        self.label_user_1 = ctk.CTkLabel(
+        # Add a frame with a horizontal layout for the user label and the "Signed in as:" text
+
+        self.user_1 = ctk.CTkFrame(
             self.main_1,
-            width=800,
+            width=300,
+            height=40,
+            corner_radius=0,
+            border_width=0,
+            border_color='#565b5e',
+            fg_color='transparent',
+        )
+        self.user_1.pack(side="top", fill="x", pady=2)
+        self.user_1._ctkmaker_min = 20
+        self.user_1.bind("<Configure>", lambda _e, _c=self.user_1: ctk.balance_pack(_c, 'width'))
+
+        self.label_user_1 = ctk.CTkLabel(
+            self.user_1,
+            width=100,
             height=40,
             corner_radius=0,
             border_width=0,
@@ -131,18 +150,42 @@ class Account(ctk.CTkToplevel):
             cursor='',
             takefocus=False,
             fg_color='transparent',
-            text=f'Signed in as: {self.parent.current_user}',
+            text=f'Signed in as:',
             font_wrap=True,
-            justify='center',
+            justify='right',
             text_color='#ffffff',
             text_color_disabled='#a0a0a0',
             compound='left',
             full_circle=True,
             unified_bind=True,
         )
-        self.label_user_1.pack(side="top", pady=2)
+        self.label_user_1.pack(side="left", pady=2)
         self.label_user_1._ctkmaker_min = 16
         self.label_user_1._ctkmaker_fixed = True
+
+        self.entry_user_1 = ctk.CTkEntry(
+            self.user_1,
+            width=100,
+            height=40,
+            border_color='#565b5e',
+            text_color='#ffffff',
+            text_color_disabled='#a0a0a0',
+        )
+        self.entry_user_1.pack(side="left", fill="x", pady=2)
+        self.entry_user_1._ctkmaker_min = 16
+
+        self.entry_user_1.insert(0, self.current_user)
+
+        self.button_save_username_1 = ctk.CTkButton(
+            self.user_1,
+            width=100,
+            height=40,
+            text="Save",
+            command=lambda: self.parent.save_username(self.entry_user_1.get().strip(), self.checkbox_remember_1.get())
+        )
+        self.button_save_username_1.pack(side="left", padx=5, pady=2)
+        self.button_save_username_1._ctkmaker_min = 16
+        self.button_save_username_1._ctkmaker_fixed = True
 
         self.separator_rect_1 = ctk.CTkFrame(
             self.main_1,
@@ -168,10 +211,12 @@ class Account(ctk.CTkToplevel):
             text='Remember my username',
             text_color='#dce4ee',
             text_color_disabled='#737373',
+            command=lambda: (rememberUsername(self.current_user if self.checkbox_remember_1.get() else None))
         )
         self.checkbox_remember_1.pack(side="top", pady=2)
         self.checkbox_remember_1._ctkmaker_min = 28
         self.checkbox_remember_1._ctkmaker_fixed = True
+        self.checkbox_remember_1.set(bool(rememberUsername() == self.current_user))
 
         self.checkbox_start_maximized_1 = ctk.CTkCheckBox(
             self.main_1,
@@ -265,62 +310,76 @@ class Account(ctk.CTkToplevel):
 
         self.theme_dropdown_1.bind("<Configure>", lambda _e, _c=self.theme_dropdown_1: ctk.balance_pack(_c, 'width'))
 
-        self.card_connection_token_1 = ctk.CTkFrame(
+        # Cloud storage is not available yet
+        # self.card_connection_token_1 = ctk.CTkFrame(
+        #     self.main_1,
+        #     width=500,
+        #     height=28,
+        #     corner_radius=0,
+        #     border_width=0,
+        #     fg_color='transparent',
+        # )
+        # self.card_connection_token_1.pack(side="top", pady=2)
+        # self.card_connection_token_1._ctkmaker_min = 20
+        # self.card_connection_token_1._ctkmaker_fixed = True
+
+        # self.card_connection_token_1.pack_propagate(False)
+        # self.card_connection_token_1.grid_propagate(False)
+
+        # self.label_connection_token_1 = ctk.CTkLabel(
+        #     self.card_connection_token_1,
+        #     width=200,
+        #     corner_radius=0,
+        #     border_width=0,
+        #     border_color='#565b5e',
+        #     padx=10,
+        #     pady=0,
+        #     cursor='',
+        #     takefocus=False,
+        #     fg_color='transparent',
+        #     text='Connection token',
+        #     font_wrap=True,
+        #     anchor='w',
+        #     justify='center',
+        #     text_color='#ffffff',
+        #     text_color_disabled='#a0a0a0',
+        #     compound='left',
+        #     full_circle=True,
+        #     unified_bind=True,
+        # )
+        # self.label_connection_token_1.pack(side="left", padx=2)
+        # self.label_connection_token_1._ctkmaker_min = 135
+        # self.label_connection_token_1._ctkmaker_fixed = True
+
+        # self.field_connection_token_1 = ctk.CTkEntry(
+        #     self.card_connection_token_1,
+        #     width=400,
+        #     corner_radius=6,
+        #     border_width=2,
+        #     border_color='#565b5e',
+        #     placeholder_text='Enter connection token...',
+        #     fg_color='#343638',
+        #     text_color='#dce4ee',
+        #     placeholder_text_color='#9ea0a2',
+        #     justify='left',
+        # )
+        # self.field_connection_token_1.pack(side="left", fill="both", expand=True, padx=2)
+        # self.field_connection_token_1._ctkmaker_min = 50
+
+        # self.card_connection_token_1.bind("<Configure>", lambda _e, _c=self.card_connection_token_1: ctk.balance_pack(_c, 'width'))
+
+        self.separator_rect_2 = ctk.CTkFrame(
             self.main_1,
-            width=500,
-            height=28,
-            corner_radius=0,
-            border_width=0,
-            fg_color='transparent',
-        )
-        self.card_connection_token_1.pack(side="top", pady=2)
-        self.card_connection_token_1._ctkmaker_min = 20
-        self.card_connection_token_1._ctkmaker_fixed = True
-
-        self.card_connection_token_1.pack_propagate(False)
-        self.card_connection_token_1.grid_propagate(False)
-
-        self.label_connection_token_1 = ctk.CTkLabel(
-            self.card_connection_token_1,
-            width=200,
-            corner_radius=0,
+            width=780,
+            height=2,
+            corner_radius=1,
             border_width=0,
             border_color='#565b5e',
-            padx=10,
-            pady=0,
-            cursor='',
-            takefocus=False,
-            fg_color='transparent',
-            text='Connection token',
-            font_wrap=True,
-            anchor='w',
-            justify='center',
-            text_color='#ffffff',
-            text_color_disabled='#a0a0a0',
-            compound='left',
-            full_circle=True,
-            unified_bind=True,
+            fg_color='#4e4e4e',
         )
-        self.label_connection_token_1.pack(side="left", padx=2)
-        self.label_connection_token_1._ctkmaker_min = 135
-        self.label_connection_token_1._ctkmaker_fixed = True
-
-        self.field_connection_token_1 = ctk.CTkEntry(
-            self.card_connection_token_1,
-            width=400,
-            corner_radius=6,
-            border_width=2,
-            border_color='#565b5e',
-            placeholder_text='Enter connection token...',
-            fg_color='#343638',
-            text_color='#dce4ee',
-            placeholder_text_color='#9ea0a2',
-            justify='left',
-        )
-        self.field_connection_token_1.pack(side="left", fill="both", expand=True, padx=2)
-        self.field_connection_token_1._ctkmaker_min = 50
-
-        self.card_connection_token_1.bind("<Configure>", lambda _e, _c=self.card_connection_token_1: ctk.balance_pack(_c, 'width'))
+        self.separator_rect_2.pack(side="top", fill="x", pady=2, padx=5)
+        self.separator_rect_2._ctkmaker_min = 20
+        self.separator_rect_2._ctkmaker_fixed = True
 
         self.change_password_1 = ctk.CTkFrame(
             self.main_1,
@@ -426,20 +485,38 @@ class Account(ctk.CTkToplevel):
         self.field_change_password_confirm_1.pack(side="left", fill="both", expand=True, padx=2)
         self.field_change_password_confirm_1._ctkmaker_min = 50
 
-        self.button_permanently_delete_1 = ctk.CTkButton(
+        self.button_change_password_1 = ctk.CTkButton(
             self.main_1,
             width=200,
             height=32,
-            corner_radius=6,
-            border_width=0,
-            border_color='#efefef',
-            text='Permanently Delete Account',
-            text_color='#ffffff',
+            text='Change Password',
             full_circle=True,
-            fg_color='#aa0000',
-            pressed_color='#850000',
-            hover_color='#ff0000',
-            image=self.img_trash_2
+        )
+        self.button_change_password_1.pack(side="top", pady=2)
+        self.button_change_password_1._ctkmaker_min = 32
+        self.button_change_password_1._ctkmaker_fixed = True
+
+        self.separator_rect_3 = ctk.CTkFrame(
+            self.main_1,
+            width=780,
+            height=2,
+            corner_radius=1,
+            border_width=0,
+            border_color='#565b5e',
+            fg_color='#4e4e4e',
+        )
+        self.separator_rect_3.pack(side="top", fill="x", pady=2, padx=5)
+        self.separator_rect_3._ctkmaker_min = 20
+        self.separator_rect_3._ctkmaker_fixed = True
+
+        self.button_permanently_delete_1 = DangerousButton(
+            self.main_1,
+            width=200,
+            height=32,
+            text='Permanently Delete Account',
+            full_circle=True,
+            image=self.img_trash_2,
+            command=self.permanently_delete_account
         )
         self.button_permanently_delete_1.pack(side="top", pady=2)
         self.button_permanently_delete_1._ctkmaker_min = 32
@@ -471,6 +548,11 @@ class Account(ctk.CTkToplevel):
         parent.data_manager.theme(new_theme.lower())
         self._build_ui()
         parent._build_ui()
+
+    def permanently_delete_account(self):
+        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "This action cannot be undone.", ["Yes", "No"]).result.lower()
+        if answer == "yes":
+            self.parent.delete_account()
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
