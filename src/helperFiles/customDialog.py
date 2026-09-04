@@ -43,6 +43,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.withdraw()  # Hide the main window
 
-    dialog = CustomButtonDialog(root, options={"Yes": "#1d681f", "No": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path="assets/icons/favicon.ico")
+    dialog = CustomButtonDialog(root, options={"Yes": "#1d681f", "No": "#E01E1E", "Cancel": "#2A2A2A"})
 
     print(f"User selected: {dialog.result}")
