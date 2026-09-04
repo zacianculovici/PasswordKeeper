@@ -144,3 +144,30 @@ class SecureDataManager:
                 json.dump(global_data, file)
             self.save_user_data()
             return True  # Username changed successfully
+
+    def delete_account(self):
+        hashed_credentials = self.user.hashed_credentials
+        file_path = f"data/{hashed_credentials}.enc"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            global_file_path = Path("data/global.json")
+            global_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
+            if self.username in global_data.get("usernames", []):
+                global_data["usernames"].remove(self.username)
+                with open(global_file_path, 'w') as file:
+                    json.dump(global_data, file)
+            return True  # Account deleted successfully
+        else:
+            return False  # Account file does not exist
+
+    def change_password(self, new_password):
+        old_hashed_credentials = self.user.hashed_credentials
+        self.user.password = new_password
+        self.user.hashed_credentials = self.user.get_hashed_credentials(self.username, new_password)
+        new_hashed_credentials = self.user.hashed_credentials
+        old_file_path = f"data/{old_hashed_credentials}.enc"
+        new_file_path = f"data/{new_hashed_credentials}.enc"
+        print(f"Renaming file from '{old_file_path}' to '{new_file_path}'")
+        os.rename(old_file_path, new_file_path)
+        self.password = new_password
+        self.save_user_data()
