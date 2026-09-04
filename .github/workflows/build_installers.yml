@@ -43,8 +43,13 @@ jobs:
         run: |
           pyinstaller --noconfirm --clean --onedir --windowed "src\MainPage.py" --name PasswordKeeper --add-data "src/assets;assets" --collect-all customtkinter
 
-      - name: Build with PyInstaller (macOS and Linux)
-        if: matrix.os != 'windows-latest'
+      - name: Build with PyInstaller (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --add-data "src/assets:assets" --collect-all customtkinter
+
+      - name: Build with PyInstaller (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --add-data "src/assets:assets" --collect-all customtkinter
 
@@ -78,6 +83,8 @@ jobs:
           if [ -z "$VERSION" ]; then VERSION="1.0.0"; fi
 
           brew install create-dmg
+          mkdir -p dist/dmg-root
+          cp -R dist/PasswordKeeper.app dist/dmg-root/PasswordKeeper.app
           create-dmg \
             --volname "PasswordKeeper Installer" \
             --window-pos 200 120 \
@@ -87,7 +94,7 @@ jobs:
             --hide-extension "PasswordKeeper.app" \
             --app-drop-link 425 120 \
             "dist/PasswordKeeper-$VERSION-Universal.dmg" \
-            "dist/PasswordKeeper.app"
+            "dist/dmg-root"
 
       # --- LINUX: Tarball Archive (.tar.gz) ---
       - name: Build Linux Tarball
@@ -98,7 +105,7 @@ jobs:
           if [ -z "$VERSION" ]; then VERSION="1.0.0"; fi
 
           cd dist
-          tar -czf PasswordKeeper-$VERSION-Linux-x86_64.tar.gz main/
+          tar -czf PasswordKeeper-$VERSION-Linux-x86_64.tar.gz PasswordKeeper/
           cd ..
 
       - name: Upload Artifacts
