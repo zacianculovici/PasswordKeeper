@@ -1,12 +1,13 @@
 import os
 import json
+from helperFiles.paths import data_path
 
 global debug_mode
 debug_mode = "off"  # Set to "verbose" for detailed debug output, or "silent" for no output
 
 class DataManager:
     def __init__(self, file_path):
-        self.file_path = file_path
+        self.file_path = data_path(file_path) if not os.path.isabs(file_path) else file_path
         self.file_data = self.load_file_data()
 
     def __setattr__(self, name, value):
@@ -17,7 +18,7 @@ class DataManager:
             self.save_file_data()
 
     def load_file_data(self):
-        if not os.path.exists("./" + self.file_path):
+        if not os.path.exists(self.file_path):
             if debug_mode == "verbose":
                 print(f"File '{self.file_path}' does not exist. Creating a new file.")
             # create the file if it doesn't exist

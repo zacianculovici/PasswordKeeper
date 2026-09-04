@@ -6,6 +6,7 @@ import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from helperFiles.paths import data_path
 
 global debug_mode, salt
 salt = b'\x9f\x1c\x8e\x1b\x9d\x1e\x8f\x1c\x9a\x1b\x9d\x1e\x8f\x1c'  # Use a proper salt in production, eg. os.urandom(16) (this can't be generated randomly each time, otherwise the key will change and the data will be unrecoverable. it must be stored somewhere, or derived from a password, etc. maybe in a config file or environment variable. example of a config file: config.json with {"salt": "base64_encoded_salt"} and then load it with json.load(open("config.json"))["salt"].encode() or something like that. or maybe derive it from the username and password, but that might not be secure enough. anyway, just make sure to use a proper salt in production.
@@ -23,12 +24,12 @@ class SecureDataManager:
         self.user = objects.User(username, password)
         hashed_credentials = self.user.hashed_credentials
 
-        file_path = f"data/{hashed_credentials}.enc"
+        file_path = data_path(f"{hashed_credentials}.enc")
         if not os.path.exists(file_path):
             if self.create:
                 self.user_data = {"start_maximised": False, "theme": "blue", "categories": {}, "passwords": {}}
                 self.save_user_data()
-                global_file_path = Path("data/global.json")
+                global_file_path = data_path("global.json")
                 global_file_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
                 global_file_data["usernames"].append(username)
                 with open(global_file_path, 'w') as file:
@@ -54,14 +55,14 @@ class SecureDataManager:
                 return json.loads(decrypted_data.decode())
 
     def save_user_data(self):
-        global_file_path = Path("data/global.json")
+        global_file_path = data_path("global.json")
         global_file_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
         if self.username not in global_file_data.get("usernames", []):
             global_file_data["usernames"].append(self.user.hashed_credentials)
             with open(global_file_path, 'w') as file:
                 json.dump(global_file_data, file)
         hashed_credentials = self.user.hashed_credentials
-        file_path = f"data/{hashed_credentials}.enc"
+        file_path = data_path(f"{hashed_credentials}.enc")
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
@@ -97,12 +98,12 @@ class SecureDataManager:
         user = objects.User(username, password)
         hashed_credentials = user.hashed_credentials
         print(f"Checking if account exists for user '{username}' with hashed credentials '{hashed_credentials}'")
-        file_path = f"data/{hashed_credentials}.enc"
+        file_path = data_path(f"{hashed_credentials}.enc")
         return os.path.exists(file_path)
 
     @staticmethod
     def username_exists(username):
-        global_file_path = Path("data/global.json")
+        global_file_path = data_path("global.json")
         if not global_file_path.exists():
             print(f"Global file '{global_file_path}' does not exist. Creating a new file.")
             global_data = {"usernames": []}
@@ -131,12 +132,12 @@ class SecureDataManager:
             self.user.username = new_username
             self.user.hashed_credentials = self.user.get_hashed_credentials(new_username, self.password)
             new_hashed_credentials = self.user.hashed_credentials
-            old_file_path = f"data/{old_hashed_credentials}.enc"
-            new_file_path = f"data/{new_hashed_credentials}.enc"
+            old_file_path = data_path(f"{old_hashed_credentials}.enc")
+            new_file_path = data_path(f"{new_hashed_credentials}.enc")
             print(f"Renaming file from '{old_file_path}' to '{new_file_path}'")
             os.rename(old_file_path, new_file_path)
             self.username = new_username
-            global_file_path = Path("data/global.json")
+            global_file_path = data_path("global.json")
             global_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
             global_data["usernames"].append(new_username)
             with open(global_file_path, 'w') as file:
@@ -146,10 +147,10 @@ class SecureDataManager:
 
     def delete_account(self):
         hashed_credentials = self.user.hashed_credentials
-        file_path = f"data/{hashed_credentials}.enc"
+        file_path = data_path(f"{hashed_credentials}.enc")
         if os.path.exists(file_path):
             os.remove(file_path)
-            global_file_path = Path("data/global.json")
+            global_file_path = data_path("global.json")
             global_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
             if self.username in global_data.get("usernames", []):
                 global_data["usernames"].remove(self.username)
@@ -164,8 +165,8 @@ class SecureDataManager:
         self.user.password = new_password
         self.user.hashed_credentials = self.user.get_hashed_credentials(self.username, new_password)
         new_hashed_credentials = self.user.hashed_credentials
-        old_file_path = f"data/{old_hashed_credentials}.enc"
-        new_file_path = f"data/{new_hashed_credentials}.enc"
+        old_file_path = data_path(f"{old_hashed_credentials}.enc")
+        new_file_path = data_path(f"{new_hashed_credentials}.enc")
         print(f"Renaming file from '{old_file_path}' to '{new_file_path}'")
         os.rename(old_file_path, new_file_path)
         self.password = new_password

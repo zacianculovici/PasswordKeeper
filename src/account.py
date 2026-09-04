@@ -7,6 +7,7 @@ from helperFiles.center_window_on_screen import center_window_on_screen
 from helperFiles.localDataManager import rememberUsername
 from helperFiles.objects import DangerousButton
 from helperFiles.customDialog import CustomButtonDialog
+from helperFiles.paths import resource_path
 
 class Account(ctk.CTkToplevel):
     def __init__(self, parent=None, current_user=None, theme_names=None, current_theme=None):
@@ -17,7 +18,7 @@ class Account(ctk.CTkToplevel):
         self.minsize(400, 300)
         self.grab_set()
         self.after(50, lambda: center_window_on_screen(self, 660, 400))
-        self.after(250, lambda: self.iconbitmap("assets/icons/user-round-cog.ico"))
+        self.after(250, lambda: self.iconbitmap(str(resource_path("assets", "icons", "user-round-cog.ico"))))
 
         # ===== Initialize variables ======
         self.current_user = current_user
@@ -30,10 +31,10 @@ class Account(ctk.CTkToplevel):
 
     def _build_ui(self):
         # Preload images so they are not garbage-collected
-        self.img_log_out = ctk.CTkImage(light_image=Image.open('assets/images/log-out.png'), dark_image=Image.open('assets/images/log-out.png'), size=(20, 20))
-        self.img_trash_2 = ctk.CTkImage(light_image=Image.open('assets/images/trash-2.png'), dark_image=Image.open('assets/images/trash-2.png'), size=(20, 20))
-        self.img_eye = ctk.CTkImage(light_image=Image.open('assets/images/eye.png'), dark_image=Image.open('assets/images/eye.png'), size=(20, 20))
-        self.img_eye_off = ctk.CTkImage(light_image=Image.open('assets/images/eye-off.png'), dark_image=Image.open('assets/images/eye-off.png'), size=(20, 20))
+        self.img_log_out = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'log-out.png')), dark_image=Image.open(resource_path('assets', 'images', 'log-out.png')), size=(20, 20))
+        self.img_trash_2 = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'trash-2.png')), dark_image=Image.open(resource_path('assets', 'images', 'trash-2.png')), size=(20, 20))
+        self.img_eye = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye.png')), size=(20, 20))
+        self.img_eye_off = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), size=(20, 20))
 
         self.body_1 = ctk.CTkFrame(
             self,
@@ -571,7 +572,7 @@ class Account(ctk.CTkToplevel):
                 widget.destroy()
             else:
                 print(f"Skipping destruction of Toplevel widget with name: '{widget.winfo_name()}'")
-        ctk.set_default_color_theme("assets/themes/" + new_theme.lower() + ".json")
+        ctk.set_default_color_theme(str(resource_path("assets", "themes", new_theme.lower() + ".json")))
         parent.current_theme = new_theme.lower()
         self.current_theme = new_theme.lower()
         parent.data_manager.theme(new_theme.lower())
@@ -579,7 +580,7 @@ class Account(ctk.CTkToplevel):
         parent._build_ui()
 
     def permanently_delete_account(self):
-        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "This action cannot be undone.", {"Yes": "#E01E1E", "No": "#2A2A2A"}, icon_path='assets/icons/circle-alert.ico').result.lower()
+        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "This action cannot be undone.", {"Yes": "#E01E1E", "No": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-alert.ico'))).result.lower()
         if answer == "yes":
             self.parent.delete_account()
         else:

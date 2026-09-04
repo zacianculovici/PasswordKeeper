@@ -1,6 +1,7 @@
 import customtkinter
 from CTkToolTip import CTkToolTip
 from PIL import Image
+from helperFiles.paths import resource_path
 
 root = customtkinter.CTk()
 root.geometry("300x200")
@@ -8,8 +9,8 @@ root.geometry("300x200")
 # 1. Load your icon using CTkImage
 # (Ensure you have an image file named 'info_icon.png' in your project folder)
 icon_image = customtkinter.CTkImage(
-    light_image=Image.open("assets/images/eye.png"),  # Path to your icon for light mode
-    dark_image=Image.open("assets/images/eye.png"),   # Path to your icon for dark mode
+    light_image=Image.open(resource_path("assets", "images", "eye.png")),  # Path to your icon for light mode
+    dark_image=Image.open(resource_path("assets", "images", "eye.png")),   # Path to your icon for dark mode
     size=(30, 30) # Adjust icon size here
 )
 

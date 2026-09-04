@@ -1,8 +1,9 @@
 import json
+from helperFiles.paths import data_path
 
 def load_local_data():
     try:
-        with open("data/local.json", "r") as file:
+        with open(data_path("local.json"), "r") as file:
             local_data = json.load(file)
     except FileNotFoundError:
         print("Local data file not found. Creating a new one.")
@@ -22,5 +23,5 @@ def rememberUsername(*args, **kwargs):
     save_local_data(local_data)
 
 def save_local_data(local_data):
-    with open("data/local.json", "w") as file:
+    with open(data_path("local.json"), "w") as file:
         json.dump(local_data, file, indent=4)

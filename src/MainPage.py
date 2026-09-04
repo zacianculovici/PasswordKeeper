@@ -16,6 +16,7 @@ import datetime
 from helperFiles.localDataManager import *
 import traceback
 from helperFiles.objects import DangerousButton
+from helperFiles.paths import resource_path
 
 global original_print
 original_print = builtins.print
@@ -31,7 +32,7 @@ debug_mode = "off"  # Set to minimal, medium, verbose, or off for different leve
 show_loading_window = False  # Set to True to show the loading window, or False to disable it.
 
 # Get names without extensions for all files in the assets/themes folder
-theme_names = [f.stem for f in Path("assets/themes").iterdir() if f.is_file()]
+theme_names = [f.stem for f in resource_path("assets", "themes").iterdir() if f.is_file()]
 
 # Save original geometry manager methods
 orig_pack = ctk.CTkBaseClass.pack
@@ -92,21 +93,21 @@ class MainWindow(ctk.CTk):
             print("Data manager not initialized. Exiting application.")
             self.destroy()
         self.current_theme = self.data_manager.user_data.get("theme", "blue")
-        ctk.set_default_color_theme("assets/themes/" + self.current_theme + ".json")  # Set default theme based on user preference
+        ctk.set_default_color_theme(str(resource_path("assets", "themes", self.current_theme + ".json")))  # Set default theme based on user preference
         self._build_ui()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def _build_ui(self):
         # Preload images so they are not garbage-collected
-        self.img_brain_cog = ctk.CTkImage(light_image=Image.open('assets/images/brain-cog.png'), dark_image=Image.open('assets/images/brain-cog.png'), size=(20, 20))
-        self.img_user_round_cog = ctk.CTkImage(light_image=Image.open('assets/images/user-round-cog.png'), dark_image=Image.open('assets/images/user-round-cog.png'), size=(20, 20))
-        self.img_plus = ctk.CTkImage(light_image=Image.open('assets/images/plus.png'), dark_image=Image.open('assets/images/plus.png'), size=(20, 20))
-        self.img_trash_2 = ctk.CTkImage(light_image=Image.open('assets/images/trash-2.png'), dark_image=Image.open('assets/images/trash-2.png'), size=(20, 20))
-        self.img_x = ctk.CTkImage(light_image=Image.open('assets/images/x.png'), dark_image=Image.open('assets/images/x.png'), size=(20, 20))
-        self.img_eye = ctk.CTkImage(light_image=Image.open('assets/images/eye.png'), dark_image=Image.open('assets/images/eye.png'), size=(20, 20))
-        self.img_eye_off = ctk.CTkImage(light_image=Image.open('assets/images/eye-off.png'), dark_image=Image.open('assets/images/eye-off.png'), size=(20, 20))
-        self.img_copy = ctk.CTkImage(light_image=Image.open('assets/images/copy.png'), dark_image=Image.open('assets/images/copy.png'), size=(20, 20))
-        self.img_check = ctk.CTkImage(light_image=Image.open('assets/images/check.png'), dark_image=Image.open('assets/images/check.png'), size=(20, 20))
+        self.img_brain_cog = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'brain-cog.png')), dark_image=Image.open(resource_path('assets', 'images', 'brain-cog.png')), size=(20, 20))
+        self.img_user_round_cog = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'user-round-cog.png')), dark_image=Image.open(resource_path('assets', 'images', 'user-round-cog.png')), size=(20, 20))
+        self.img_plus = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'plus.png')), dark_image=Image.open(resource_path('assets', 'images', 'plus.png')), size=(20, 20))
+        self.img_trash_2 = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'trash-2.png')), dark_image=Image.open(resource_path('assets', 'images', 'trash-2.png')), size=(20, 20))
+        self.img_x = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'x.png')), dark_image=Image.open(resource_path('assets', 'images', 'x.png')), size=(20, 20))
+        self.img_eye = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye.png')), size=(20, 20))
+        self.img_eye_off = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), size=(20, 20))
+        self.img_copy = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'copy.png')), dark_image=Image.open(resource_path('assets', 'images', 'copy.png')), size=(20, 20))
+        self.img_check = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'check.png')), dark_image=Image.open(resource_path('assets', 'images', 'check.png')), size=(20, 20))
 
         if show_loading_window:
             self.loadtk = loadingPleaseWait.LoadingWindow(self, text="Loading theme: <X%>\nplease wait...\n", total_amount=75, delay=0, debug=debug_mode)
@@ -1739,7 +1740,7 @@ class MainWindow(ctk.CTk):
             for password_name, password_data in list(self.data_manager.user_data["passwords"].items()):
                 if password_data.get("category") == category_name:
                     dependencies.append(password_name)
-        answer = CustomButtonDialog(self, title="Delete Category", message=f"Are you sure you want to delete the category '{category_name}'?\n\nThis will also delete {len(dependencies)} associated password(s):\n{', '.join(dependencies) if dependencies else 'None'}", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path='assets/icons/circle-exclamation-mark.ico').result
+        answer = CustomButtonDialog(self, title="Delete Category", message=f"Are you sure you want to delete the category '{category_name}'?\n\nThis will also delete {len(dependencies)} associated password(s):\n{', '.join(dependencies) if dependencies else 'None'}", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-exclamation-mark.ico'))).result
         if answer.lower() == "delete":
             self.data_manager.user_data["categories"].pop(category_name, None)
             for password_name in dependencies:
@@ -1818,7 +1819,7 @@ class MainWindow(ctk.CTk):
         return False
 
     def prompt_save_changes(self):
-        dialog = CustomButtonDialog(self, title="Unsaved Changes", message="You have unsaved changes. What would you like to do?", options={"Save": "#1d681f", "Discard": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path='assets/icons/circle-question-mark.ico')
+        dialog = CustomButtonDialog(self, title="Unsaved Changes", message="You have unsaved changes. What would you like to do?", options={"Save": "#1d681f", "Discard": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-question-mark.ico')))
         return dialog.result
 
     def on_close(self):

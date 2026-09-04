@@ -3,6 +3,7 @@ from PIL import Image
 from pathlib import Path
 from helperFiles.toast import show_toast
 from helperFiles.center_window_on_screen import center_window_on_screen
+from helperFiles.paths import resource_path
 
 class Signup(ctk.CTkToplevel):
     def __init__(self, parent=None, on_submit=None):
@@ -32,8 +33,8 @@ class Signup(ctk.CTkToplevel):
 
     def _build_ui(self):
         # Preload images so they are not garbage-collected
-        self.eye_img = ctk.CTkImage(light_image=Image.open('assets/images/eye.png'), dark_image=Image.open('assets/images/eye.png'), size=(20, 20))
-        self.eye_off_img = ctk.CTkImage(light_image=Image.open('assets/images/eye-off.png'), dark_image=Image.open('assets/images/eye-off.png'), size=(20, 20))
+        self.eye_img = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye.png')), size=(20, 20))
+        self.eye_off_img = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), size=(20, 20))
 
         self.protocol("WM_DELETE_WINDOW", self._close_dialog)
 
