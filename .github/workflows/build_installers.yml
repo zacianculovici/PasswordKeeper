@@ -38,9 +38,15 @@ jobs:
           pip install pyinstaller
           pip install -r requirements.txt
 
-      - name: Build with PyInstaller (Folder Mode)
+      - name: Build with PyInstaller (Windows)
+        if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --noconfirm --clean --onedir --windowed "src\MainPage.py" --name PasswordKeeper --add-data "src\assets;assets" --collect-all customtkinter
+          pyinstaller --noconfirm --clean --onedir --windowed "src\MainPage.py" --name PasswordKeeper --add-data "src/assets;assets" --collect-all customtkinter
+
+      - name: Build with PyInstaller (macOS and Linux)
+        if: matrix.os != 'windows-latest'
+        run: |
+          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --add-data "src/assets:assets" --collect-all customtkinter
 
       # --- WINDOWS: Inno Setup Installer (.exe) ---
       - name: Update Version in Installer Script
