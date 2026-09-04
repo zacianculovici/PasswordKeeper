@@ -220,5 +220,5 @@ __marimo__/
 # Wakatime
 .wakatime-project
 
-# Python Application Output
-*.enc
+# Python Application Output Data
+/src/data
