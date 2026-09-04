@@ -30,7 +30,7 @@ AI has been used in parts of this project for:
 
 ## ✔️ Other declarations
 * `CTkMaker` was used for most of the core UI creation, as well as the very nice-looking [src/helperFiles/toast.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/helperFiles/toast.py) and [src/helperFiles/scrollable_dropdown.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/helperFiles/scrollable_dropdown.py).
-* Some help from Google Gemini and AI Overview with simple tests such as [src/getWorkingAreaDimensions.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/getWorkingAreaDimensions.py), [src/tooltiptest.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/tooltiptest.py) and [src/tooltiptest2.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/tooltiptest2.py).
+* Some help from Google Gemini and AI Overview with small explanation and simple tests such as [src/getWorkingAreaDimensions.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/getWorkingAreaDimensions.py), [src/tooltiptest.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/tooltiptest.py) and [src/tooltiptest2.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/tooltiptest2.py).
 
 ## 📅 Coming soon!
 Features I would like to add in the future include:
