@@ -10,16 +10,16 @@ PasswordKeeper is a fully functional python application that uses `customtkinter
 * Multiple user capabilities, making it easy to share a single installation with multiple users.
 * Easy password search, editing and deletion.
 
-<!-- Releases is commented out as there are no current available releases -->
+Releases is commented out as there are no current available releases
 
-<!-- ## [Releases](https://github.com/zacianculovici/PasswordKeeper/releases)
+## [Releases](https://github.com/zacianculovici/PasswordKeeper/releases)
 Download PasswordKeeper for your system:
 
-[![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/MyApp-VERSION-Windows-Setup.exe)
+[![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-VERSION-Windows-Setup.exe)
 
-[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/MyApp-VERSION-Universal.dmg)
+[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-VERSION-Universal.dmg)
 
-[![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/MyApp-VERSION-Linux-x86_64.tar.gz) -->
+[![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-VERSION-Linux-x86_64.tar.gz)
 
 ## ✨ AI Usage
 AI has been used in parts of this project for:
