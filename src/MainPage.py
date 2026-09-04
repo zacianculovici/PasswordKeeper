@@ -1,8 +1,6 @@
 import customtkinter as ctk
 from PIL import Image
 import account
-from helperFiles.dataManager import DataManager
-from helperFiles.objects import User, NoAccountError
 from helperFiles.secureFileManager import SecureDataManager
 from helperFiles.scrollable_dropdown import ScrollableDropdown
 from helperFiles.toast import show_toast
