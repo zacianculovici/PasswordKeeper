@@ -1472,7 +1472,8 @@ class MainWindow(ctk.CTk):
 
     def update_password_list(self, unsaved_password=None):
         if debug_mode == "verbose":
-            print(f"Traceback[update_password_list()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
+            stack_trace = "\n".join(traceback.format_stack())
+            print(f"Traceback[update_password_list()]@{datetime.datetime.now()}: {stack_trace}")
         for child in self.password_list_sf_1.winfo_children():
             child.destroy()
         self.password_buttons = []
@@ -1850,7 +1851,8 @@ class MainWindow(ctk.CTk):
 
     def update_unsaved(self, event=None):
         if debug_mode == "verbose":
-            print(f"Traceback[update_unsaved()]@{datetime.datetime.now()}: {'\n'.join(traceback.format_stack())}")
+            stack_trace = "\n".join(traceback.format_stack())
+            print(f"Traceback[update_unsaved()]@{datetime.datetime.now()}: {stack_trace}")
         unsaved = self.check_for_unsaved_changes()
         if unsaved:
             match self.current_main_frame:
