@@ -8,7 +8,7 @@ import login
 import signup
 import tkinter as tk
 from pathlib import Path
-import helperFiles.loadingPleaseWait as loadingPleaseWait
+from helperFiles import loadingPleaseWait
 from helperFiles.customDialog import CustomButtonDialog
 import webbrowser
 import builtins
