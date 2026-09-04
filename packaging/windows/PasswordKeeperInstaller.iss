@@ -14,11 +14,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 ; Pulls the entire directory compiled by PyInstaller into the Program Files directory
-Source: "..\..\dist\main\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\dist\PasswordKeeper\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\Password Keeper"; Filename: "{app}\main.exe"
-Name: "{autodesktop}\Password Keeper"; Filename: "{app}\main.exe"; Tasks: desktopicon
+Name: "{group}\Password Keeper"; Filename: "{app}\PasswordKeeper.exe"
+Name: "{autodesktop}\Password Keeper"; Filename: "{app}\PasswordKeeper.exe"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
