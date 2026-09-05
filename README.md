@@ -17,7 +17,7 @@ Download PasswordKeeper for your system:
 
 [![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Windows-Setup.exe)
 
-[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-VERSION-Universal.dmg)
+[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Linux.dmg)
 
 [![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Linux-x86_64.tar.gz)
 
