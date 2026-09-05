@@ -7,7 +7,6 @@ from helperFiles.toast import show_toast
 import login
 import signup
 import tkinter as tk
-from pathlib import Path
 from helperFiles.customDialog import CustomButtonDialog
 import webbrowser
 import builtins
@@ -16,6 +15,7 @@ from helperFiles.localDataManager import *
 import traceback
 from helperFiles.objects import DangerousButton
 from helperFiles.paths import resource_path
+import re as regex
 
 global original_print
 original_print = builtins.print
@@ -107,6 +107,11 @@ class MainWindow(ctk.CTk):
         self.img_eye_off = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), dark_image=Image.open(resource_path('assets', 'images', 'eye-off.png')), size=(20, 20))
         self.img_copy = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'copy.png')), dark_image=Image.open(resource_path('assets', 'images', 'copy.png')), size=(20, 20))
         self.img_check = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'check.png')), dark_image=Image.open(resource_path('assets', 'images', 'check.png')), size=(20, 20))
+
+        self.search_var_category = ctk.StringVar()
+        self.search_var_category.trace_add("write", lambda *args: self.update_category_list())
+        self.search_var_password = ctk.StringVar()
+        self.search_var_password.trace_add("write", lambda *args: self.update_password_list())
 
         if show_loading_window:
             from helperFiles import loadingPleaseWait
@@ -285,6 +290,7 @@ class MainWindow(ctk.CTk):
             text_color='#dce4ee',
             placeholder_text_color='#9ea0a2',
             justify='left',
+            textvariable=self.search_var_category
         )
         self.search_categories_field.pack(side="top")
         self.search_categories_field._ctkmaker_min = 50
@@ -340,6 +346,7 @@ class MainWindow(ctk.CTk):
             text_color='#dce4ee',
             placeholder_text_color='#9ea0a2',
             justify='left',
+            textvariable=self.search_var_password
         )
         self.search_passwords_field.pack(side="top")
         self.search_passwords_field._ctkmaker_min = 50
@@ -1410,6 +1417,8 @@ class MainWindow(ctk.CTk):
         for child in self.category_list_sf_1.winfo_children():
             child.destroy()
         self.category_buttons = []
+        search_term = self.search_var_category.get().strip().lower() if hasattr(self, "search_var_category") else ""
+        search_list = regex.findall(r'[\w\.-]+', search_term) if search_term else self.data_manager.user_data["categories"]
 
         self.all_btn_category = ctk.CTkButton(
             self.category_list_sf_1,
@@ -1427,23 +1436,24 @@ class MainWindow(ctk.CTk):
         self.all_btn_category._ctkmaker_fixed = True
 
         for category in self.data_manager.user_data["categories"]:
-            if debug_mode == "verbose":
-                print(f"Creating button for category: {category}")
-            category_button = ctk.CTkButton(
-                self.category_list_sf_1,
-                height=32,
-                corner_radius=6,
-                border_width=0,
-                border_color='#efefef',
-                text='•' + unsaved_category if category == unsaved_category else category,
-                text_color='#ffffff',
-                full_circle=True,
-                command=lambda c=category: self.select_category(c)
-            )
-            category_button.pack(side="top", pady=2)
-            category_button._ctkmaker_min = 32
-            category_button._ctkmaker_fixed = True
-            self.category_buttons.append(category_button)
+            if all(search_list_item in category.lower() for search_list_item in search_list) or search_term == "":
+                if debug_mode == "verbose":
+                    print(f"Creating button for category: {category}")
+                category_button = ctk.CTkButton(
+                    self.category_list_sf_1,
+                    height=32,
+                    corner_radius=6,
+                    border_width=0,
+                    border_color='#efefef',
+                    text='•' + unsaved_category if category == unsaved_category else category,
+                    text_color='#ffffff',
+                    full_circle=True,
+                    command=lambda c=category: self.select_category(c)
+                )
+                category_button.pack(side="top", pady=2)
+                category_button._ctkmaker_min = 32
+                category_button._ctkmaker_fixed = True
+                self.category_buttons.append(category_button)
 
         if len(self.category_buttons) == 0:
             self.no_categories_label = ctk.CTkLabel(
@@ -1478,11 +1488,14 @@ class MainWindow(ctk.CTk):
             child.destroy()
         self.password_buttons = []
 
+        search_term = self.search_var_password.get().strip().lower() if hasattr(self, "search_var_password") else ""
+        search_list = regex.findall(r'[\w\.-]+', search_term) if search_term else self.data_manager.user_data["passwords"]
+
         if debug_mode == "verbose":
             print(f"Password data: {self.data_manager.user_data['passwords']}")
 
         for password, data in self.data_manager.user_data["passwords"].items():
-            if self.selected_category.lower() == "all" or data.get("category") == self.selected_category or self.selected_category is None:
+            if (self.selected_category.lower() == "all" or data.get("category") == self.selected_category or self.selected_category is None) and (all(search_list_item in password.lower() for search_list_item in search_list) or search_term == ""):
                 if debug_mode == "verbose":
                     print(f"Creating button for password: {password}")
                 password_button = ctk.CTkButton(
