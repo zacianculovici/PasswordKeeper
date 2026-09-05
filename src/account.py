@@ -582,7 +582,7 @@ class Account(ctk.CTkToplevel):
         parent._build_ui()
 
     def permanently_delete_account(self):
-        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "This action cannot be undone.", {"Yes": "#E01E1E", "No": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-alert.ico'))).result.lower()
+        answer = CustomButtonDialog(self, "Are you sure you want to permanently delete your account?", "Are you sure you wish to permanently delete your account?\nThis action cannot be undone.", {"Yes": "#E01E1E", "No": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-alert.ico'))).result.lower()
         if answer == "yes":
             self.parent.delete_account()
         else:
