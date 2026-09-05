@@ -1881,9 +1881,12 @@ class MainWindow(ctk.CTk):
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
-    app = MainWindow()
     try:
+        app = MainWindow()
         if app.winfo_exists():
             app.mainloop()
-    except tk.TclError:
-        pass
+    except Exception as e:
+        if str(e) == "can't invoke \"destroy\" command: application has been destroyed":
+            print("Application has been destroyed. Exiting gracefully.")
+        else:
+            print(f"Error encountered: {e}")
