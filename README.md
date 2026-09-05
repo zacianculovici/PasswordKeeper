@@ -27,6 +27,7 @@ AI has been used in parts of this project for:
 * Small code generation - Github Copilot
 * Minor error explanation and fixes - Github Copilot
 * Code completions - Github Copilot (The fact that Github Copilot is giving me suggestions as I type right now "is a huge help, and I am very grateful for it!") (Text in "" is a quote from Github Copilot 🤣🤣🤣) 
+* Github Copilot - build_installlers.yml loads of help with making it work!
 
 ## ✔️ Other declarations
 * `CTkMaker` was used for most of the core UI creation, as well as the very nice-looking [src/helperFiles/toast.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/helperFiles/toast.py) and [src/helperFiles/scrollable_dropdown.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/helperFiles/scrollable_dropdown.py).
