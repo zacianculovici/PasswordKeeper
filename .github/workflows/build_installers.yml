@@ -136,7 +136,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: all-artifacts/*
-          generate_release_notes: true
 
       - name: Update README with New Version
         run: |
