@@ -30,7 +30,6 @@ class Signup(ctk.CTkToplevel):
 
         self.bind("<Return>", lambda event: self.submit_signup())
         self.bind("<Escape>", lambda event: self._close_dialog())
-        self.bind("<space>", lambda event: print(self.geometry()))
         self.after(100, self.field_username.focus_set)
 
     def _build_ui(self):

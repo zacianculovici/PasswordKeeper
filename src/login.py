@@ -31,7 +31,6 @@ class Login(ctk.CTkToplevel):
 
         self.bind("<Return>", lambda event: self.submit_login())
         self.bind("<Escape>", lambda event: self._close_dialog())
-        self.bind("<space>", lambda event: print(self.geometry()))
         if rememberUsername() and rememberUsername() != False:
             self.after(100, self.field_password.focus_set)
         else:
