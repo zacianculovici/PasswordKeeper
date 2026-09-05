@@ -1802,7 +1802,7 @@ class MainWindow(ctk.CTk):
             for password_name, password_data in list(self.data_manager.user_data["passwords"].items()):
                 if password_data.get("category") == category_name:
                     dependencies.append(password_name)
-        answer = CustomButtonDialog(self, title="Delete Category", message=f"Are you sure you want to delete the category '{category_name}'?\n\nThis will also delete {len(dependencies)} associated password(s):\n{', '.join(dependencies) if dependencies else 'None'}", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-exclamation-mark.ico'))).result
+        answer = CustomButtonDialog(self, title="Delete Category", message=f"Are you sure you want to delete the category '{category_name}'?\n\nThis will also delete {len(dependencies)} associated password(s):\n{', '.join(dependencies) if dependencies else 'None'}", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-alert.ico'))).result
         if answer.lower() == "delete":
             self.data_manager.user_data["categories"].pop(category_name, None)
             for password_name in dependencies:
@@ -1817,7 +1817,7 @@ class MainWindow(ctk.CTk):
             print("User canceled the delete action. Staying on the current frame.")
 
     def delete_password(self):
-        answer = CustomButtonDialog(self, title="Delete Password", message=f"Are you sure you want to delete the password '{self.selected_password}'?", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-exclamation-mark.ico'))).result
+        answer = CustomButtonDialog(self, title="Delete Password", message=f"Are you sure you want to delete the password '{self.selected_password}'?", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-alert.ico'))).result
         if answer.lower() != "delete":
             print("User canceled the delete action. Staying on the current frame.")
             return
