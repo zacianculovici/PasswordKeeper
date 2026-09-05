@@ -1,10 +1,14 @@
 import customtkinter as ctk
+import time
+from helperFiles.center_window_on_screen import center_window_on_screen
 
 class CustomButtonDialog(ctk.CTkToplevel):
     def __init__(self, parent, title="Dialog", message="This is a custom dialog.", options=None, icon_path=None, wrap_number=3):
         super().__init__(parent)
         self.title(title)
         self.resizable(False, False)
+        time.sleep(0.1)  # Small delay to ensure the window is created before centering
+        center_window_on_screen(self, 400, 200)
         self.grab_set()  # Make the dialog modal
         self.lift()  # Bring the dialog to the front
         self.result = None
@@ -13,7 +17,7 @@ class CustomButtonDialog(ctk.CTkToplevel):
 
         # Create a label for the message
         self.message_label = ctk.CTkLabel(self, text=message, wraplength=350)
-        self.message_label.pack(pady=20)
+        self.message_label.pack(pady=20, padx=20)
 
         # Create a frame for the buttons
         self.button_frame = ctk.CTkFrame(self, fg_color="transparent")
