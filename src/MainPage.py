@@ -108,11 +108,6 @@ class MainWindow(ctk.CTk):
         self.img_copy = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'copy.png')), dark_image=Image.open(resource_path('assets', 'images', 'copy.png')), size=(20, 20))
         self.img_check = ctk.CTkImage(light_image=Image.open(resource_path('assets', 'images', 'check.png')), dark_image=Image.open(resource_path('assets', 'images', 'check.png')), size=(20, 20))
 
-        self.search_var_category = ctk.StringVar()
-        self.search_var_category.trace_add("write", lambda *args: self.update_category_list())
-        self.search_var_password = ctk.StringVar()
-        self.search_var_password.trace_add("write", lambda *args: self.update_password_list())
-
         if show_loading_window:
             from helperFiles import loadingPleaseWait
             self.loadtk = loadingPleaseWait.LoadingWindow(self, text="Loading theme: <X%>\nplease wait...\n", total_amount=75, delay=0, debug=debug_mode)
@@ -290,7 +285,6 @@ class MainWindow(ctk.CTk):
             text_color='#dce4ee',
             placeholder_text_color='#9ea0a2',
             justify='left',
-            textvariable=self.search_var_category
         )
         self.search_categories_field.pack(side="top")
         self.search_categories_field._ctkmaker_min = 50
@@ -346,7 +340,6 @@ class MainWindow(ctk.CTk):
             text_color='#dce4ee',
             placeholder_text_color='#9ea0a2',
             justify='left',
-            textvariable=self.search_var_password
         )
         self.search_passwords_field.pack(side="top")
         self.search_passwords_field._ctkmaker_min = 50
@@ -420,6 +413,31 @@ class MainWindow(ctk.CTk):
 
         self.header_pass.pack_propagate(False)
         self.header_pass.grid_propagate(False)
+
+        self.label_pass_name = ctk.CTkLabel(
+            self.header_pass,
+            width=100,
+            corner_radius=0,
+            border_width=0,
+            border_color='#565b5e',
+            padx=10,
+            pady=0,
+            cursor='',
+            takefocus=False,
+            fg_color='transparent',
+            text='Password Name',
+            font_wrap=True,
+            anchor='w',
+            justify='center',
+            text_color='#ffffff',
+            text_color_disabled='#a0a0a0',
+            compound='left',
+            full_circle=True,
+            unified_bind=True,
+        )
+        self.label_pass_name.pack(side="left", padx=2)
+        self.label_pass_name._ctkmaker_min = 91
+        self.label_pass_name._ctkmaker_fixed = True
 
         self.password_name_field = ctk.CTkEntry(
             self.header_pass,
@@ -1006,6 +1024,31 @@ class MainWindow(ctk.CTk):
         self.header_cat.pack_propagate(False)
         self.header_cat.grid_propagate(False)
 
+        self.label_cat_name = ctk.CTkLabel(
+            self.header_cat,
+            width=100,
+            corner_radius=0,
+            border_width=0,
+            border_color='#565b5e',
+            padx=10,
+            pady=0,
+            cursor='',
+            takefocus=False,
+            fg_color='transparent',
+            text='Category Name',
+            font_wrap=True,
+            anchor='w',
+            justify='center',
+            text_color='#ffffff',
+            text_color_disabled='#a0a0a0',
+            compound='left',
+            full_circle=True,
+            unified_bind=True,
+        )
+        self.label_cat_name.pack(side="left", padx=2)
+        self.label_cat_name._ctkmaker_min = 91
+        self.label_cat_name._ctkmaker_fixed = True
+
         self.category_name_field = ctk.CTkEntry(
             self.header_cat,
             corner_radius=0,
@@ -1298,13 +1341,16 @@ class MainWindow(ctk.CTk):
                 case "save":
                     self.save_current_item()
                     frame.tkraise()
+                    frame.focus_set()
                 case "discard":
                     frame.tkraise()
+                    frame.focus_set()
                 case "cancel":
                     print("User canceled the action. Staying on the current frame.")
                     return False
         else:
             frame.tkraise()
+            frame.focus_set()
         self.update_password_list()
         self.update_category_list()
         match frame:
@@ -1417,7 +1463,7 @@ class MainWindow(ctk.CTk):
         for child in self.category_list_sf_1.winfo_children():
             child.destroy()
         self.category_buttons = []
-        search_term = self.search_var_category.get().strip().lower() if hasattr(self, "search_var_category") else ""
+        search_term = self.search_categories_field.get().strip().lower()
         search_list = regex.findall(r'[\w\.-]+', search_term) if search_term else self.data_manager.user_data["categories"]
 
         self.all_btn_category = ctk.CTkButton(
@@ -1488,14 +1534,14 @@ class MainWindow(ctk.CTk):
             child.destroy()
         self.password_buttons = []
 
-        search_term = self.search_var_password.get().strip().lower() if hasattr(self, "search_var_password") else ""
+        search_term = self.search_passwords_field.get().strip().lower() if hasattr(self, "search_passwords_field") else ""
         search_list = regex.findall(r'[\w\.-]+', search_term) if search_term else self.data_manager.user_data["passwords"]
 
         if debug_mode == "verbose":
             print(f"Password data: {self.data_manager.user_data['passwords']}")
 
         for password, data in self.data_manager.user_data["passwords"].items():
-            if (self.selected_category.lower() == "all" or data.get("category") == self.selected_category or self.selected_category is None) and (all(search_list_item in password.lower() for search_list_item in search_list) or search_term == ""):
+            if ((self.selected_category.lower() if self.selected_category else "") == "all" or data.get("category") == self.selected_category or self.selected_category is None) and (all(search_list_item in password.lower() for search_list_item in search_list) or search_term == ""):
                 if debug_mode == "verbose":
                     print(f"Creating button for password: {password}")
                 password_button = ctk.CTkButton(
@@ -1700,6 +1746,7 @@ class MainWindow(ctk.CTk):
         self.data_manager.save_user_data()
         show_toast(self, f"Category '{category_name}' saved successfully.", "success")
         self.update_category_list()
+        self.focus_set()
 
     def recursive_rename_category(self, old_category_name, new_category_name):
         user_data = self.data_manager.user_data
@@ -1743,6 +1790,7 @@ class MainWindow(ctk.CTk):
         show_toast(self, f"Password '{password_name}' saved successfully.", "success")
         print(f"Password saved successfully: {password_name}")
         self.update_password_list()
+        self.focus_set()
 
     def delete_category(self):
         category_name = self.category_name_field.get().strip()
@@ -1769,6 +1817,10 @@ class MainWindow(ctk.CTk):
             print("User canceled the delete action. Staying on the current frame.")
 
     def delete_password(self):
+        answer = CustomButtonDialog(self, title="Delete Password", message=f"Are you sure you want to delete the password '{self.selected_password}'?", options={"Delete": "#E01E1E", "Cancel": "#2A2A2A"}, icon_path=str(resource_path('assets', 'icons', 'circle-exclamation-mark.ico'))).result
+        if answer.lower() != "delete":
+            print("User canceled the delete action. Staying on the current frame.")
+            return
         password_name = self.password_name_field.get().strip()
         if not password_name:
             self.set_main_frame(self.main_frame_none)
@@ -1888,6 +1940,7 @@ class MainWindow(ctk.CTk):
 
     def delete_account(self):
         self.data_manager.delete_account()
+        rememberUsername(None)
         show_toast(self, f"Account '{self.current_user}' deleted successfully.", "success")
         self.account_settings_dialog.destroy()
         self.logout()
