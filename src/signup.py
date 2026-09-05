@@ -1,3 +1,4 @@
+import time
 import customtkinter as ctk
 from PIL import Image
 from pathlib import Path
@@ -13,7 +14,8 @@ class Signup(ctk.CTkToplevel):
         self.geometry("520x500")
         self.minsize(400, 460)
         self.grab_set()
-        self.after(50, lambda: center_window_on_screen(self, 520, 500))  # Center the window after it has been created
+        time.sleep(0.1)  # Allow the window to be created before centering
+        center_window_on_screen(self, 520, 500)  # Center the window after it has been created
 
         # ====== Initialize variables ======
         self.username_data = None

@@ -1,3 +1,4 @@
+import time
 import customtkinter as ctk
 from PIL import Image
 from helperFiles.scrollable_dropdown import ScrollableDropdown
@@ -17,7 +18,8 @@ class Account(ctk.CTkToplevel):
         self.geometry("660x400")
         self.minsize(400, 300)
         self.grab_set()
-        self.after(50, lambda: center_window_on_screen(self, 660, 400))
+        time.sleep(0.1)  # Allow the window to be created before centering
+        center_window_on_screen(self, 660, 400)
         self.after(250, lambda: self.iconbitmap(str(resource_path("assets", "icons", "user-round-cog.ico"))))
 
         # ===== Initialize variables ======
