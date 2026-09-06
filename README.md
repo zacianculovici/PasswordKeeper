@@ -19,11 +19,11 @@ PasswordKeeper is a fully functional python application that uses `customtkinter
 ### [Downloads](https://github.com/zacianculovici/PasswordKeeper/releases)
 Download PasswordKeeper for your system:
 
-[![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Windows-Setup.exe)
+[![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.1-Windows-Setup.exe)
 
-[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-macOS-x86_64.dmg)
+[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.1-macOS-x86_64.dmg)
 
-[![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Linux-x86_64.tar.gz)
+[![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.1-Linux-x86_64.tar.gz)
 
 ### Running the application from source
 To build the application manually from source, follow these steps:
