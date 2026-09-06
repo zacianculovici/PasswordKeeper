@@ -31,7 +31,7 @@ class Login(ctk.CTkToplevel):
 
         self.bind("<Return>", lambda event: self.submit_login())
         self.bind("<Escape>", lambda event: self._close_dialog())
-        if rememberUsername() and rememberUsername() != False:
+        if rememberUsername() and rememberUsername() != None:
             self.after(100, self.field_password.focus_set)
         else:
             self.after(100, self.field_username.focus_set)
@@ -134,7 +134,7 @@ class Login(ctk.CTkToplevel):
         )
         self.field_username.pack(side="left", fill="both", expand=True, padx=2)
         self.field_username._ctkmaker_min = 50
-        if rememberUsername() and rememberUsername() != False:
+        if rememberUsername() and rememberUsername() != None:
             self.field_username.insert(0, rememberUsername())
 
         self.username.bind("<Configure>", lambda _e, _c=self.username: ctk.balance_pack(_c, 'width'))

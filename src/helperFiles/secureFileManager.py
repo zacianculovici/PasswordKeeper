@@ -58,7 +58,7 @@ class SecureDataManager:
         global_file_path = data_path("global.json")
         global_file_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
         if self.username not in global_file_data.get("usernames", []):
-            global_file_data["usernames"].append(self.user.hashed_credentials)
+            global_file_data["usernames"].append(self.user.username)
             with open(global_file_path, 'w') as file:
                 json.dump(global_file_data, file)
         hashed_credentials = self.user.hashed_credentials

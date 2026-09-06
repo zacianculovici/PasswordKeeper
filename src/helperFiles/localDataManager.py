@@ -7,7 +7,7 @@ def load_local_data():
             local_data = json.load(file)
     except FileNotFoundError:
         print("Local data file not found. Creating a new one.")
-        local_data = {"rememberUsername": False, "connectionToken": None}
+        local_data = {"rememberUsername": None, "connectionToken": None}
         save_local_data(local_data)
     return local_data
 
