@@ -10,9 +10,13 @@ PasswordKeeper is a fully functional python application that uses `customtkinter
 * Multiple user capabilities, making it easy to share a single installation with multiple users.
 * Easy password search, editing and deletion.
 
-Releases is commented out as there are no current available releases
+## ⏱️ Quick Start Guide
+1. Download the latest release for your system from the [Downloads](#downloads) section below or [run it manually](#running-the-application-from-source) from source.
+2. Install the application.
+3. Run the application and create a new user account.
+4. Start adding your passwords and categories and enjoy the security and convenience of PasswordKeeper!
 
-## [Releases](https://github.com/zacianculovici/PasswordKeeper/releases)
+### [Downloads](https://github.com/zacianculovici/PasswordKeeper/releases)
 Download PasswordKeeper for your system:
 
 [![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Windows-Setup.exe)
@@ -20,6 +24,29 @@ Download PasswordKeeper for your system:
 [![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-macOS-x86_64.dmg)
 
 [![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.0-Linux-x86_64.tar.gz)
+
+### Running the application from source
+To build the application manually from source, follow these steps:
+1. Clone the repository:
+```bash
+git clone https://github.com/zacianculovici/PasswordKeeper.git
+```
+2. Navigate to the project directory:
+```bash
+cd PasswordKeeper
+```
+3. Install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+4. Run the application:
+```bash
+python src/MainPage.py
+```
+5. Optionally, you can build the application into a standalone executable using PyInstaller:
+```bash
+pyinstaller --noconfirm --clean --onedir --windowed "src\MainPage.py" --name PasswordKeeper --paths "src" --collect-all helperFiles --hidden-import=helperFiles.loadingPleaseWait --add-data "src/assets;assets" --collect-data customtkinter
+```
 
 ## ✨ AI Usage
 AI has been used in parts of this project for:
