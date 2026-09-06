@@ -363,7 +363,15 @@ class MainWindow(ctk.CTk):
         self.password_list_sf_1._parent_frame.configure(width=200, height=200)
         self.password_list_sf_1._parent_frame.grid_propagate(False)
 
-        self.update_password_list("All")
+        self.show_inactive_passwords_checkbox = ctk.CTkCheckBox(
+            self.password_list_sf_1,
+            text="Show Inactive Passwords",
+            command=self.update_password_list
+        )
+        self.show_inactive_passwords_checkbox.pack(side="top", pady=2)
+        self.show_inactive_passwords_checkbox._ctkmaker_min = 32
+        self.show_inactive_passwords_checkbox._ctkmaker_fixed = True
+        self.show_inactive_passwords_checkbox.set(True)
 
         self.passwords_v_1.bind("<Configure>", lambda _e, _c=self.passwords_v_1: ctk.balance_pack(_c, 'height'))
 
@@ -1491,7 +1499,7 @@ class MainWindow(ctk.CTk):
                     corner_radius=6,
                     border_width=0,
                     border_color='#efefef',
-                    text='•' + unsaved_category if category == unsaved_category else category,
+                    text='*' + unsaved_category if category == unsaved_category else category,
                     text_color='#ffffff',
                     full_circle=True,
                     command=lambda c=category: self.select_category(c)
@@ -1531,7 +1539,8 @@ class MainWindow(ctk.CTk):
             stack_trace = "\n".join(traceback.format_stack())
             print(f"Traceback[update_password_list()]@{datetime.datetime.now()}: {stack_trace}")
         for child in self.password_list_sf_1.winfo_children():
-            child.destroy()
+            if child != self.show_inactive_passwords_checkbox:
+                child.destroy()
         self.password_buttons = []
 
         search_term = self.search_passwords_field.get().strip().lower() if hasattr(self, "search_passwords_field") else ""
@@ -1541,7 +1550,7 @@ class MainWindow(ctk.CTk):
             print(f"Password data: {self.data_manager.user_data['passwords']}")
 
         for password, data in self.data_manager.user_data["passwords"].items():
-            if ((self.selected_category.lower() if self.selected_category else "") == "all" or data.get("category") == self.selected_category or self.selected_category is None) and (all(search_list_item in password.lower() for search_list_item in search_list) or search_term == ""):
+            if ((self.selected_category.lower() if self.selected_category else "") == "all" or data.get("category") == self.selected_category or self.selected_category is None) and (all(search_list_item in password.lower() for search_list_item in search_list) or search_term == "") and (self.show_inactive_passwords_checkbox.get() or data.get("status", "active").lower() == "active"):
                 if debug_mode == "verbose":
                     print(f"Creating button for password: {password}")
                 password_button = ctk.CTkButton(
@@ -1550,8 +1559,8 @@ class MainWindow(ctk.CTk):
                     corner_radius=6,
                     border_width=0,
                     border_color='#efefef',
-                    text='•' + unsaved_password if password==unsaved_password else password,
-                    text_color='#ffffff',
+                    text='*' + unsaved_password if password==unsaved_password else password,
+                    text_color=('#ffffff' if data.get("status", "active").lower() == "active" else "#a0a0a0"),
                     full_circle=True,
                     command=lambda p=password: (self.select_password(p))
                 )
@@ -1622,6 +1631,7 @@ class MainWindow(ctk.CTk):
         if category_data:
             self.field_desc_cat.delete(0, tk.END)
             self.field_desc_cat.insert(0, category_data["description"])
+            self.field_desc_cat._activate_placeholder() if category_data["description"] == "" else None
             self.field_type.set(category_data.get("type", "Digital"))
 
         self.update_category_list()
@@ -1691,7 +1701,7 @@ class MainWindow(ctk.CTk):
             self.field_user.delete(0, tk.END)
             self.field_password.delete(0, tk.END)
             self.field_category.configure(values=list(self.data_manager.user_data["categories"].keys()) if len(self.data_manager.user_data["categories"]) > 0 else ["Add New Category..."])
-            self.field_category.set(list(self.data_manager.user_data["categories"].keys())[0] if len(self.data_manager.user_data["categories"]) > 0 else "No Categories!")
+            self.field_category.set(self.selected_category if self.selected_category in self.data_manager.user_data["categories"] else (list(self.data_manager.user_data["categories"].keys())[0] if len(self.data_manager.user_data["categories"]) > 0 else "No Categories!"))
             self.field_website.delete(0, tk.END)
             self.field_status_pass.set("Active")
             self.password_name_field._activate_placeholder()
