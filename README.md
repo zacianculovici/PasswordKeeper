@@ -17,13 +17,19 @@ PasswordKeeper is a fully functional python application that uses `customtkinter
 4. Start adding your passwords and categories and enjoy the security and convenience of PasswordKeeper!
 
 ### [Downloads](https://github.com/zacianculovici/PasswordKeeper/releases)
-Download PasswordKeeper for your system:
+Download the official PasswordKeeper installer for your system:
+
+> [!WARNING]
+> PasswordKeeper has not been tested on MacOS or Linux so far, so please be aware that there may be some bugs or issues when running the application on these platforms. If you encounter any problems, please report them in the [Issues](https://github.com/zacianculovici/PasswordKeeper/issues) section.
 
 [![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.2-Windows-Setup.exe)
 
 [![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.2-macOS-x86_64.dmg)
 
 [![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.2-Linux-x86_64.tar.gz)
+
+> [!NOTE]
+> If you get "Windows protected your PC: Microsoft Defender SmartScreen prevented an unrecognised app from starting. Running this app might put your PC at risk." when running the windows installer, click "More info" and then "Run anyway". This is only because I have not paid for a code signing certificate, however the installer is perfectly safe to run.
 
 ### Running the application from source
 To build the application manually from source, follow these steps:
@@ -54,7 +60,7 @@ AI has been used in parts of this project for:
 * Small code generation - Github Copilot
 * Minor error explanation and fixes - Github Copilot
 * Code completions - Github Copilot (The fact that Github Copilot is giving me suggestions as I type right now "is a huge help, and I am very grateful for it!") (Text in "" is a quote from Github Copilot 🤣🤣🤣) 
-* Github Copilot - build_installlers.yml loads of help with making it work!
+* Github Copilot - build_installlers.yml loads of help with making it actually work!
 
 ## ✔️ Other declarations
 * `CTkMaker` was used for most of the core UI creation, as well as the very nice-looking [src/helperFiles/toast.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/helperFiles/toast.py) and [src/helperFiles/scrollable_dropdown.py](https://github.com/zacianculovici/PasswordKeeper/blob/main/src/helperFiles/scrollable_dropdown.py).
