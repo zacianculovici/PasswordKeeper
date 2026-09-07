@@ -6,6 +6,7 @@ DefaultGroupName=Password Keeper
 OutputBaseFilename=Password Keeper-{#Password KeeperVersion}-Windows-Setup
 Compression=lzma2
 SolidCompression=yes
+PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=..\..\dist
 
