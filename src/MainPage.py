@@ -259,7 +259,7 @@ class MainWindow(ctk.CTk):
 
         self.categories_v_1 = ctk.CTkFrame(
             self.main_h_1,
-            width=175,
+            width=200,
             height=550,
             corner_radius=0,
             border_width=0,
@@ -314,7 +314,7 @@ class MainWindow(ctk.CTk):
 
         self.passwords_v_1 = ctk.CTkFrame(
             self.main_h_1,
-            width=175,
+            width=200,
             height=550,
             corner_radius=0,
             border_width=0,
@@ -1335,8 +1335,6 @@ class MainWindow(ctk.CTk):
         self.bind("<Control-s>", lambda _e: self.save_current_item())
         self.bind("<Control-w>", lambda _e: self.set_main_frame(self.main_frame_none))
         self.bind("<Alt-a>", lambda _e: self.open_account_settings())
-        self.bind_all("<Key>", self.update_unsaved)
-        self.bind_all("<Button-1>", self.update_unsaved)
 
         if show_loading_window:
             self.loadtk.update_progress()
@@ -1804,6 +1802,12 @@ class MainWindow(ctk.CTk):
 
     def delete_category(self):
         category_name = self.category_name_field.get().strip()
+        if category_name not in self.data_manager.user_data.get("categories", {}):
+            if self.selected_category and self.selected_category in self.data_manager.user_data.get("categories", {}):
+                category_name = self.selected_category
+            else:
+                show_toast(self, "No category selected to delete.", "error")
+                return
         if not category_name:
             self.set_main_frame(self.main_frame_none)
             return
@@ -1832,6 +1836,12 @@ class MainWindow(ctk.CTk):
             print("User canceled the delete action. Staying on the current frame.")
             return
         password_name = self.password_name_field.get().strip()
+        if password_name not in self.data_manager.user_data.get("passwords", {}):
+            if self.selected_password and self.selected_password in self.data_manager.user_data.get("passwords", {}):
+                password_name = self.selected_password
+            else:
+                show_toast(self, "No password selected to delete.", "error")
+                return
         if not password_name:
             self.set_main_frame(self.main_frame_none)
             return
@@ -1878,6 +1888,8 @@ class MainWindow(ctk.CTk):
                 if self.selected_password == "All":
                     return False
                 return saved_data != current_data or password_name != self.selected_password
+            else:
+                return True
         elif self.current_main_frame == "category":
             category_name = self.category_name_field.get().strip()
             if category_name in self.data_manager.user_data["categories"] or self.selected_category in self.data_manager.user_data["categories"]:
@@ -1892,6 +1904,8 @@ class MainWindow(ctk.CTk):
                 if self.selected_category == "All":
                     return False
                 return saved_data != current_data or category_name != self.selected_category
+            else:
+                return True
         return False
 
     def prompt_save_changes(self):
