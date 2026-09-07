@@ -3,6 +3,8 @@
 ## 📋 Overview
 PasswordKeeper is a fully functional python application that uses `customtkinter`, `CTkMaker` and cryptography to store your passwords easily and securely. 
 
+![PasswordKeeper Screenshot](./Screenshots/Screenshot%20App%20and%20Account%20Settings.png)
+
 ## 🛠️ Features
 * Completely secure hashing and encryption method means that it is inmpossible to decrypt your passwords without the correct password. This means that even if someone gets access to your password file, all they will se is a bunch of gibberish. (Such as: )
 * Intuitive and easy to use interface.
