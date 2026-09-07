@@ -44,7 +44,7 @@ class SecureDataManager:
                     algorithm=hashes.SHA256(),
                     length=32,
                     salt=salt,
-                    iterations=390000,
+                    iterations=600000,
                 )
                 generated_key = base64.urlsafe_b64encode(kdf.derive((username + password).encode()))
                 fernet = Fernet(generated_key)
@@ -67,7 +67,7 @@ class SecureDataManager:
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=390000,
+            iterations=600000,
         )
         generated_key = base64.urlsafe_b64encode(kdf.derive((self.username + self.password).encode()))
         fernet = Fernet(generated_key)
