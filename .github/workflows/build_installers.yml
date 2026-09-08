@@ -105,7 +105,7 @@ jobs:
           if [ -z "$VERSION" ]; then VERSION="1.0.0"; fi
 
           cd dist
-          ls
+          ls -a
           tar -czf PasswordKeeper-$VERSION-Linux-x86_64.tar.gz PasswordKeeper/
           cd ..
 
@@ -118,6 +118,7 @@ jobs:
             dist/*.dmg
             dist/*.tar.gz
           if-no-files-found: error
+          include-hidden-files: true
 
   release:
     needs: build-matrix
