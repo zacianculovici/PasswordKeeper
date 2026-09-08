@@ -31,7 +31,7 @@ Download the official PasswordKeeper installer for your system:
 [![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.3-Linux-x86_64.tar.gz)
 
 > [!NOTE]
-> If you get "Windows protected your PC: Microsoft Defender SmartScreen prevented an unrecognised app from starting. Running this app might put your PC at risk." when running the windows installer, click "More info" and then "Run anyway". This is only because I have not paid for a code signing certificate, however the installer is perfectly safe to run.
+> If you get "Windows protected your PC: Microsoft Defender SmartScreen prevented an unrecognised app from starting. Running this app might put your PC at risk." or "Security Certificate could not be verified" when running the windows installer, click "More info" and then "Run anyway". This is only because I have not paid for a code signing certificate, however the installer is perfectly safe to run.
 
 ### Running the application from source
 To build the application manually from source, follow these steps:
