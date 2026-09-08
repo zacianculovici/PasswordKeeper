@@ -70,7 +70,7 @@ jobs:
 
       - name: Build Windows Installer
         if: matrix.os == 'windows-latest'
-        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.9
         with:
           path: packaging/windows/PasswordKeeperInstaller.iss
 
