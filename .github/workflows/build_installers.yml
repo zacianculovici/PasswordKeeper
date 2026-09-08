@@ -51,7 +51,7 @@ jobs:
       - name: Build with PyInstaller (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pyinstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --paths "src" --collect-all helperFiles --hidden-import=helperFiles.loadingPleaseWait --add-data "src/assets:assets" --collect-data customtkinter
+          python3 -m PyInstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --paths "src" --collect-all helperFiles --hidden-import=helperFiles.loadingPleaseWait --hidden-import='PIL._tkinter_finder' --add-data "src/assets:assets" --collect-data customtkinter
 
       # --- WINDOWS: Inno Setup Installer (.exe) ---
       - name: Update Version in Installer Script
