@@ -31,7 +31,7 @@ class SecureDataManager:
                 self.save_user_data()
                 global_file_path = data_path("global.json")
                 global_file_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
-                global_file_data["usernames"].append(username)
+                global_file_data["usernames"].append(username) if username not in global_file_data.get("usernames", []) else None
                 with open(global_file_path, 'w') as file:
                     json.dump(global_file_data, file)
                 return self.user_data
@@ -139,7 +139,7 @@ class SecureDataManager:
             self.username = new_username
             global_file_path = data_path("global.json")
             global_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
-            global_data["usernames"].append(new_username)
+            global_data["usernames"][global_data['usernames'].index(self.username)] = new_username
             with open(global_file_path, 'w') as file:
                 json.dump(global_data, file)
             self.save_user_data()
