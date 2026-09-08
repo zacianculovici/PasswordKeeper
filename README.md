@@ -24,11 +24,11 @@ Download the official PasswordKeeper installer for your system:
 > [!WARNING]
 > PasswordKeeper has not been tested on MacOS or Linux so far, so please be aware that there may be some bugs or issues when running the application on these platforms. If you encounter any problems, please report them in the [Issues](https://github.com/zacianculovici/PasswordKeeper/issues) section.
 
-[![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.3-Windows-Setup.exe)
+[![Windows Download](https://img.shields.io/badge/Download-Windows_Setup-blue?logo=windows)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.4-Windows-Setup.exe)
 
-[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.3-macOS-x86_64.dmg)
+[![macOS Download](https://img.shields.io/badge/Download-macOS_DMG-lightgrey?logo=apple)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.4-macOS-x86_64.dmg)
 
-[![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.3-Linux-x86_64.tar.gz)
+[![Linux Download](https://img.shields.io/badge/Download-Linux_Tarball-orange?logo=linux)](https://github.com/zacianculovici/PasswordKeeper/releases/latest/download/PasswordKeeper-1.0.4-Linux-x86_64.tar.gz)
 
 > [!NOTE]
 > If you get "Windows protected your PC: Microsoft Defender SmartScreen prevented an unrecognised app from starting. Running this app might put your PC at risk." or "Security Certificate could not be verified" when running the windows installer, click "More info" and then "Run anyway". This is only because I have not paid for a code signing certificate, however the installer is perfectly safe to run.
