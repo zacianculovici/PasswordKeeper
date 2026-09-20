@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from helperFiles.paths import data_path
 
 global debug_mode, salt
-salt = b'\x9f\x1c\x8e\x1b\x9d\x1e\x8f\x1c\x9a\x1b\x9d\x1e\x8f\x1c'  # Use a proper salt in production, eg. os.urandom(16) (this can't be generated randomly each time, otherwise the key will change and the data will be unrecoverable. it must be stored somewhere, or derived from a password, etc. maybe in a config file or environment variable. example of a config file: config.json with {"salt": "base64_encoded_salt"} and then load it with json.load(open("config.json"))["salt"].encode() or something like that. or maybe derive it from the username and password, but that might not be secure enough. anyway, just make sure to use a proper salt in production.
+salt = b'\x9f\x1c\x8e\x1b\x9d\x1e\x8f\x1c\x9a\x1b\x9d\x1e\x8f\x1c'    # @TODO: Must figure out how to use separate salts for every user - SECURITY ISSUE
 debug_mode = "verbose"  # Set to "verbose" for detailed debug output, or "off" for no output
 
 class SecureDataManager:
