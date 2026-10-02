@@ -46,12 +46,13 @@ class SecureDataManager:
                     salt=salt,
                     iterations=600000,
                 )
-                generated_key = base64.urlsafe_b64encode(kdf.derive((username + password).encode()))
+                generated_key = base64.urlsafe_b64encode(kdf.derive((self.user.hashed_username + self.user.hashed_password).encode()))
                 fernet = Fernet(generated_key)
                 encrypted_data = file.read()
                 decrypted_data = fernet.decrypt(encrypted_data.encode())
-                if debug_mode == "verbose":
-                    print(f"Decrypted data for user '{username}': {decrypted_data.decode()}")
+                # Debugging line - NOT SAFE FOR PRODUCTION
+                # if debug_mode == "verbose":
+                #     print(f"Decrypted data for user '{username}': {decrypted_data.decode()}")
                 return json.loads(decrypted_data.decode())
 
     def save_user_data(self):
@@ -69,7 +70,7 @@ class SecureDataManager:
             salt=salt,
             iterations=600000,
         )
-        generated_key = base64.urlsafe_b64encode(kdf.derive((self.username + self.password).encode()))
+        generated_key = base64.urlsafe_b64encode(kdf.derive((self.user.hashed_username + self.user.hashed_password).encode()))
         fernet = Fernet(generated_key)
         encrypted_data = fernet.encrypt(json.dumps(self.user_data).encode())
         with open(file_path, 'w') as file:
