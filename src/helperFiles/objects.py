@@ -6,11 +6,13 @@ class User:
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.hashed_username = hashlib.sha256(username.encode()).hexdigest()
+        self.hashed_password = hashlib.sha256(password.encode()).hexdigest()
         self.hashed_credentials = self.get_hashed_credentials(username, password)
 
     @staticmethod
     def get_hashed_credentials(username, password):
-        credentials = username + password
+        credentials = hashlib.sha256(username.encode()).hexdigest() + hashlib.sha256(password.encode()).hexdigest()
         return hashlib.sha256(credentials.encode()).hexdigest()
 
 class NoAccountError(Exception):
