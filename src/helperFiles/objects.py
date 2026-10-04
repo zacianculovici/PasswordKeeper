@@ -41,7 +41,7 @@ def safeDelete(file_path):
     try:
         if file_path.exists():
             with open(file_path, 'w') as file:  # Extra precaution
-                file.write(0x00)
+                file.write("0x00")
             os.remove(file_path)
             print(f"Deleted file: {file_path}")
         else:
