@@ -1381,6 +1381,10 @@ class MainWindow(ctk.CTk):
             self.current_user = username
             self.signedin = True
             self.data_manager = SecureDataManager(username, password)
+            if self.data_manager.user_data is None:
+                target = self.loginDialog if getattr(self, "loginDialog", None) and self.loginDialog.winfo_exists() else self
+                show_toast(target, "Failed to load user data. Please try again.", "error")
+                return False
             if debug_mode == "verbose":
                 print(f"User data loaded for {username}: {self.data_manager.user_data}")
             if self.data_manager.start_maximised():
@@ -1419,7 +1423,8 @@ class MainWindow(ctk.CTk):
             if remember_username:
                 rememberUsername(self.current_user)
             return True
-        except:
+        except Exception as e:
+            print(f"Error creating account for {username}: {e}")
             target = self.signupDialog if getattr(self, "signupDialog", None) and self.signupDialog.winfo_exists() else self
             show_toast(target, "Failed to create account. Please try again.", "error")
             return False
