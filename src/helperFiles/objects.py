@@ -1,4 +1,5 @@
 import hashlib
+import os
 from customtkinter import CTkButton
 import customtkinter
 
@@ -34,6 +35,19 @@ class DangerousButton(CTkButton):
         )
         self.bind("<Enter>", lambda event: self.configure(fg_color="red"))
         self.bind("<Leave>", lambda event: self.configure(fg_color="transparent"))
+
+def safeDelete(file_path):
+    """Safely delete a file if it exists."""
+    try:
+        if file_path.exists():
+            with open(file_path, 'w') as file:  # Extra precaution
+                file.write(0x00)
+            os.remove(file_path)
+            print(f"Deleted file: {file_path}")
+        else:
+            print(f"File does not exist: {file_path}")
+    except Exception as e:
+        print(f"Error deleting file {file_path}: {e}")
 
 if __name__ == "__main__":
     app = customtkinter.CTk()

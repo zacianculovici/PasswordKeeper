@@ -150,7 +150,8 @@ class SecureDataManager:
         hashed_credentials = self.user.hashed_credentials
         file_path = data_path(f"{hashed_credentials}.enc")
         if os.path.exists(file_path):
-            os.remove(file_path)
+            objects.safeDelete(file_path)   # Safely delete and write over with 0x00 
+                                            # (Not needed, because the file is permanently deleted, not sent to the recycle bin, but just an extra layer of security)
             global_file_path = data_path("global.json")
             global_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
             if self.username in global_data.get("usernames", []):
