@@ -10,7 +10,6 @@ from helperFiles.paths import data_path
 from helperFiles.salinityManager import generateSalt, getSalt, removeSalt
 
 global debug_mode, salt
-# salt = b'\x9f\x1c\x8e\x1b\x9d\x1e\x8f\x1c\x9a\x1b\x9d\x1e\x8f\x1c'    # @TODO: Must figure out how to use separate salts for every user - SECURITY ISSUE
 debug_mode = "verbose"  # Set to "verbose" for detailed debug output, or "off" for no output
 
 class SecureDataManager:
