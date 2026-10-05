@@ -1383,7 +1383,7 @@ class MainWindow(ctk.CTk):
             self.data_manager = SecureDataManager(username, password)
             if self.data_manager.user_data is None:
                 target = self.loginDialog if getattr(self, "loginDialog", None) and self.loginDialog.winfo_exists() else self
-                show_toast(target, "Failed to load user data. Please try again.", "error")
+                show_toast(target, "Failed to load user data. Files may have been tampered with.", "error")
                 return False
             if debug_mode == "verbose":
                 print(f"User data loaded for {username}: {self.data_manager.user_data}")
