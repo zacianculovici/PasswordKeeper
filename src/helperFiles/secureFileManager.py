@@ -3,13 +3,13 @@ import json
 import helperFiles.objects as objects
 from pathlib import Path
 import base64
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from helperFiles.paths import data_path
+from helperFiles.salinityManager import generateSalt, getSalt, removeSalt
 
 global debug_mode, salt
-salt = b'\x9f\x1c\x8e\x1b\x9d\x1e\x8f\x1c\x9a\x1b\x9d\x1e\x8f\x1c'    # @TODO: Must figure out how to use separate salts for every user - SECURITY ISSUE
 debug_mode = "verbose"  # Set to "verbose" for detailed debug output, or "off" for no output
 
 class SecureDataManager:
@@ -36,38 +36,43 @@ class SecureDataManager:
                     json.dump(global_file_data, file)
                 return self.user_data
             if debug_mode == "verbose":
-                print(f"User data file '{file_path}' does not exist. Creating a new file.")
+                print(f"User data file '{file_path}' does not exist.")
             raise objects.NoAccountError(f"User data file '{file_path}' does not exist. Please create a new account.")
         else:
             with open(file_path, 'r') as file:
                 kdf = PBKDF2HMAC(
                     algorithm=hashes.SHA256(),
                     length=32,
-                    salt=salt,
+                    salt=getSalt(hashed_credentials),
                     iterations=600000,
                 )
                 generated_key = base64.urlsafe_b64encode(kdf.derive((self.user.hashed_username + self.user.hashed_password).encode()))
                 fernet = Fernet(generated_key)
                 encrypted_data = file.read()
-                decrypted_data = fernet.decrypt(encrypted_data.encode())
+                try:
+                    decrypted_data = fernet.decrypt(encrypted_data.encode())
+                except InvalidToken:
+                    print(f"Decryption failed for user '{username}'. Invalid token.")
+                    return None
                 # Debugging line - NOT SAFE FOR PRODUCTION
                 # if debug_mode == "verbose":
                 #     print(f"Decrypted data for user '{username}': {decrypted_data.decode()}")
                 return json.loads(decrypted_data.decode())
 
     def save_user_data(self):
+        hashed_credentials = self.user.hashed_credentials
         global_file_path = data_path("global.json")
         global_file_data = json.load(open(global_file_path, 'r')) if global_file_path.exists() else {"usernames": []}
         if self.username not in global_file_data.get("usernames", []):
             global_file_data["usernames"].append(self.user.username)
             with open(global_file_path, 'w') as file:
                 json.dump(global_file_data, file)
-        hashed_credentials = self.user.hashed_credentials
+            generateSalt(self.user.hashed_credentials)
         file_path = data_path(f"{hashed_credentials}.enc")
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
-            salt=salt,
+            salt=getSalt(hashed_credentials),
             iterations=600000,
         )
         generated_key = base64.urlsafe_b64encode(kdf.derive((self.user.hashed_username + self.user.hashed_password).encode()))
@@ -158,6 +163,7 @@ class SecureDataManager:
                 global_data["usernames"].remove(self.username)
                 with open(global_file_path, 'w') as file:
                     json.dump(global_data, file)
+            removeSalt(hashed_credentials)  # Remove the salt associated with the deleted account
             return True  # Account deleted successfully
         else:
             return False  # Account file does not exist
