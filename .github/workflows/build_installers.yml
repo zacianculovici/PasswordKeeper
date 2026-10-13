@@ -59,6 +59,16 @@ jobs:
         run: |
           python3 -m PyInstaller --noconfirm --clean --onedir --windowed "src/MainPage.py" --name PasswordKeeper --paths "src" --collect-all helperFiles --hidden-import=helperFiles.loadingPleaseWait --hidden-import='PIL._tkinter_finder' --add-data "src/assets:assets" --collect-data customtkinter
 
+      - name: Upload raw binaries for debugging
+        uses: actions/upload-artifact@v7
+        with:
+          name: raw-build-${{ matrix.name }}
+          path: |
+            dist/PasswordKeeper/
+            dist/PasswordKeeper.app/
+          if-no-files-found: warn
+          include-hidden-files: true
+
       # --- WINDOWS: Inno Setup Installer (.exe) ---
       - name: Update Version in Installer Script
         if: matrix.os == 'windows-latest'
